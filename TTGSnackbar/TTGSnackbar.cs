@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Drawing;
 using CoreGraphics;
 using Foundation;
 using UIKit;
 
-namespace TTGSnackbar
+namespace SnackBarTTG.Source
 {
 
 	/**
@@ -16,10 +17,10 @@ namespace TTGSnackbar
 
 	public enum TTGSnackbarDuration
 	{
-     	Short = 1,
-    	Middle = 3,
-   		Long = 5,
-    	Forever = 9999999 // Must dismiss manually.
+		Short = 1,
+		Middle = 3,
+		Long = 5,
+		Forever = 9999999 // Must dismiss manually.
 	}
 
 	/**
@@ -34,12 +35,12 @@ namespace TTGSnackbar
 
 	public enum TTGSnackbarAnimationType
 	{
-	    FadeInFadeOut,
-	    SlideFromBottomToTop,
-	    SlideFromBottomBackToBottom,
-	    SlideFromLeftToRight,
-	    SlideFromRightToLeft,
-	    Flip,
+		FadeInFadeOut,
+		SlideFromBottomToTop,
+		SlideFromBottomBackToBottom,
+		SlideFromLeftToRight,
+		SlideFromRightToLeft,
+		Flip,
 	}
 
 	public class TTGSnackbar : UIView
@@ -85,16 +86,19 @@ namespace TTGSnackbar
 				}
 				if (_cornerRadius < 0)
 					_cornerRadius = 0;
-				
+
 				this.Layer.CornerRadius = _cornerRadius;
 				this.Layer.MasksToBounds = true;
 			}
 		}
 
 		/// Left margin. Default is 4
-		private float _leftMargin = 4; 
-		public float LeftMargin{ get { return _leftMargin;} 
-			set {_leftMargin = value; leftMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); } }
+		private float _leftMargin = 4;
+		public float LeftMargin
+		{
+			get { return _leftMargin; }
+			set { _leftMargin = value; leftMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); }
+		}
 
 		private float _rightMargin = 4;
 		public float RightMargin
@@ -114,29 +118,29 @@ namespace TTGSnackbar
 		private float _height = 44;
 		public float Height
 		{
-			get { return _height;}
-			set { _height = value; heightConstraint.Constant = _height; this.LayoutIfNeeded();}
+			get { return _height; }
+			set { _height = value; heightConstraint.Constant = _height; this.LayoutIfNeeded(); }
 		}
 
 		private string _message;
 		public string Message
 		{
-			get { return _message;}
-			set { _message = value; this.messageLabel.Text = _message;}
+			get { return _message; }
+			set { _message = value; if (this.messageLabel != null) { this.messageLabel.Text = _message; } }
 		}
 
-		private UIColor _messageTextColor;
+		private UIColor _messageTextColor = UIColor.White;
 		public UIColor MessageTextColor
 		{
 			get { return _messageTextColor; }
 			set { _messageTextColor = value; this.messageLabel.TextColor = _messageTextColor; }
 		}
 
-		private UIFont _messageTextFont;
+		private UIFont _messageTextFont = UIFont.BoldSystemFontOfSize(14);
 		public UIFont MessageTextFont
 		{
-			get { return _messageTextFont;}
-			set { _messageTextFont = value; this.messageLabel.Font = _messageTextFont;}
+			get { return _messageTextFont; }
+			set { _messageTextFont = value; this.messageLabel.Font = _messageTextFont; }
 		}
 
 		private UITextAlignment _messageTextAlign;
@@ -164,7 +168,7 @@ namespace TTGSnackbar
 		private UIColor _actionTextColor = UIColor.White;
 		public UIColor ActionTextColor
 		{
-			get { return _actionTextColor;}
+			get { return _actionTextColor; }
 			set { _actionTextColor = value; this.actionButton.SetTitleColor(_actionTextColor, UIControlState.Normal); }
 		}
 
@@ -180,8 +184,8 @@ namespace TTGSnackbar
 		private UIFont _actionTextFont = UIFont.BoldSystemFontOfSize(14);
 		public UIFont ActionTextFont
 		{
-			get { return _actionTextFont;}
-			set { _actionTextFont = value; this.actionButton.TitleLabel.Font = _actionTextFont;}
+			get { return _actionTextFont; }
+			set { _actionTextFont = value; this.actionButton.TitleLabel.Font = _actionTextFont; }
 		}
 
 		// First action text font. Default is Bold system font (14).
@@ -218,7 +222,7 @@ namespace TTGSnackbar
 		   
 		   - returns: Void
 		   */
-		public TTGSnackbar(string message, TTGSnackbarDuration duration)
+		public TTGSnackbar(string message, TTGSnackbarDuration duration) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
 		{
 			Frame = CoreGraphics.CGRect.FromLTRB(0, 0, 320, Height); //todo check if this is correct
 
@@ -239,7 +243,7 @@ namespace TTGSnackbar
 		
 		- returns: Void
 		*/
-		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action ttgAction)
+		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action ttgAction) : base()
 		{
 			Frame = CoreGraphics.CGRect.FromLTRB(0, 0, 320, Height); //todo check if this is correct
 
@@ -265,7 +269,7 @@ namespace TTGSnackbar
 		- parameter actionBlock:      Action callback closure.
 		- returns: Void
 		*/
-		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action ttgAction)
+		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action ttgAction) : base()
 		{
 			Frame = CoreGraphics.CGRect.FromLTRB(0, 0, 320, Height); //todo check if this is correct
 
@@ -285,12 +289,12 @@ namespace TTGSnackbar
 		}
 
 
-	/**
-    Show the snackbar.
-    */
-	public void Show()
-	{
-		// Only show once
+		/**
+		Show the snackbar.
+		*/
+		public void Show()
+		{
+			// Only show once
 			if (this.Superview != null)
 				return;
 
@@ -370,33 +374,34 @@ namespace TTGSnackbar
 				// Show 
 				showWithAnimation();
 			}
-			else {
+			else
+			{
 				Console.WriteLine("TTGSnackbar needs a keyWindows to display.");
 			}
-	}
+		}
 
-	/**
-    Dismiss the snackbar manually.
-    */
-	public void dismiss()
-	{
+		/**
+		Dismiss the snackbar manually.
+		*/
+		public void dismiss()
+		{
 			this.dismissAnimated(true);
 
-		// On main thread
-		//dispatch_async(dispatch_get_main_queue()) {
-		//	()->Void in
-  //          self.dismissAnimated(true)
+			// On main thread
+			//dispatch_async(dispatch_get_main_queue()) {
+			//	()->Void in
+			//          self.dismissAnimated(true)
 
-		//}
+			//}
 
 
-	}
+		}
 
-	/**
-    Init configuration.
-    */
-	private void configure()
-	{
+		/**
+		Init configuration.
+		*/
+		private void configure()
+		{
 			this.TranslatesAutoresizingMaskIntoConstraints = false;
 
 			this.BackgroundColor = UIColor.FromRGBA(255, 255, 255, 255 * 0.8f);
@@ -410,19 +415,19 @@ namespace TTGSnackbar
 
 			messageLabel.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			messageLabel.TextColor = UIColor.whiteColor();
+			messageLabel.TextColor = UIColor.White;
 
-			messageLabel.Font = messageTextFont;
+			messageLabel.Font = MessageTextFont;
 
-			messageLabel.BackgroundColor = UIColor.clearColor();
+			messageLabel.BackgroundColor = UIColor.Clear; ;
 
-			messageLabel.LineBreakMode = .ByCharWrapping;
+			messageLabel.LineBreakMode = UILineBreakMode.CharacterWrap;
 
-			messageLabel.NumberOfLines = 2;
+			messageLabel.Lines = 2;
 
-			messageLabel.TextAlignment = .Left;
+			messageLabel.TextAlignment = UITextAlignment.Left;
 
-			messageLabel.Text = message;
+			messageLabel.Text = Message;
 
 			this.AddSubview(messageLabel);
 
@@ -431,321 +436,279 @@ namespace TTGSnackbar
 
 			actionButton.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			actionButton.BackgroundColor = UIColor.Clear();
+			actionButton.BackgroundColor = UIColor.Clear;
 
-			actionButton.?TitleLabel.Font = ActionTextFont;
+			actionButton.TitleLabel.Font = ActionTextFont;
 
 			actionButton.TitleLabel.AdjustsFontSizeToFitWidth = true;
 
-			actionButton.SetTitle(actionText, forState: .Normal);
+			actionButton.SetTitle(ActionText, UIControlState.Normal);
 
-			actionButton.SetTitleColor(actionTextColor, forState: .Normal);
+			actionButton.SetTitleColor(ActionTextColor, UIControlState.Normal);
 
-			actionButton.AddTarget(self, action: #selector(doAction(_:)), forControlEvents: .TouchUpInside);
-			self.addSubview(actionButton);
+			actionButton.TouchUpInside += (s, e) => doAction(actionButton);
 
-
-		secondActionButton = UIButton()
-
-		secondActionButton.translatesAutoresizingMaskIntoConstraints = false
-
-		secondActionButton.backgroundColor = UIColor.clearColor()
-
-		secondActionButton.titleLabel?.font = secondActionTextFont
-
-		secondActionButton.titleLabel?.adjustsFontSizeToFitWidth = true
-
-		secondActionButton.setTitle(secondActionText, forState: .Normal)
-
-		secondActionButton.setTitleColor(secondActionTextColor, forState: .Normal)
-
-		secondActionButton.addTarget(self, action: #selector(doAction(_:)), forControlEvents: .TouchUpInside)
-        self.addSubview(secondActionButton)
+			this.AddSubview(actionButton);
 
 
-		seperateView = UIView()
+			secondActionButton = new UIButton();
 
-		seperateView.translatesAutoresizingMaskIntoConstraints = false
+			secondActionButton.TranslatesAutoresizingMaskIntoConstraints = false;
 
-		seperateView.backgroundColor = UIColor.grayColor()
+			secondActionButton.BackgroundColor = UIColor.Clear;
 
-		self.addSubview(seperateView)
+			secondActionButton.TitleLabel.Font = SecondActionTextFont;
 
+			secondActionButton.TitleLabel.AdjustsFontSizeToFitWidth = true;
 
-		activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .White)
+			secondActionButton.SetTitle(SecondActionText, UIControlState.Normal);
 
-		activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+			secondActionButton.SetTitleColor(SecondActionTextColor, UIControlState.Normal);
 
-		activityIndicatorView.stopAnimating()
+			secondActionButton.TouchUpInside += (s, e) => doAction(secondActionButton);
 
-		self.addSubview(activityIndicatorView)
-
-		// Add constraints
-		let hConstraints: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat(
-		"H:|-4-[messageLabel]-2-[seperateView(0.5)]-2-[actionButton]-0-[secondActionButton]-4-|",
-				options: NSLayoutFormatOptions(rawValue: 0),
-				metrics: nil,
-				views: ["messageLabel": messageLabel, "seperateView": seperateView, "actionButton": actionButton, "secondActionButton": secondActionButton])
+			this.AddSubview(secondActionButton);
 
 
-		let vConstraintsForMessageLabel: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat(
-		"V:|-0-[messageLabel]-0-|",
-				options: NSLayoutFormatOptions(rawValue: 0),
-				metrics: nil,
-				views: ["messageLabel": messageLabel])
+			seperateView = new UIView();
+
+			seperateView.TranslatesAutoresizingMaskIntoConstraints = false;
+
+			seperateView.BackgroundColor = UIColor.Gray;
+
+			this.AddSubview(seperateView);
 
 
-		let vConstraintsForSeperateView: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat(
-		"V:|-4-[seperateView]-4-|",
-				options: NSLayoutFormatOptions(rawValue: 0),
-				metrics: nil,
-				views: ["seperateView": seperateView])
+			activityIndicatorView = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.White);
+
+			activityIndicatorView.TranslatesAutoresizingMaskIntoConstraints = false;
+
+			activityIndicatorView.StopAnimating();
+
+			this.AddSubview(activityIndicatorView);
 
 
-		let vConstraintsForActionButton: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat(
-		"V:|-0-[actionButton]-0-|",
-				options: NSLayoutFormatOptions(rawValue: 0),
-				metrics: nil,
-				views: ["actionButton": actionButton])
+			//var viewsDictionary = NSDictionary.FromObjectsAndKeys(new NSObject[] { messageLabel, seperateView }, new NSObject[] { new NSString("messageLabel"), new NSString("seperateView") });
+
+			// Add constraints
+			var hConstraints = NSLayoutConstraint.FromVisualFormat(
+				"H:|-4-[messageLabel]-2-[seperateView(0.5)]-2-[actionButton]-0-[secondActionButton]-4-|",
+				0,new NSDictionary(),
+				NSDictionary.FromObjectsAndKeys(
+					new NSObject[] {
+						messageLabel,
+						seperateView,
+						actionButton,
+						secondActionButton
+				}, new NSObject[] {
+					new NSString("messageLabel"),
+					new NSString("seperateView"),
+					new NSString("actionButton"),
+					new NSString("secondActionButton")
+				})
+			);
 
 
-		let vConstraintsForSecondActionButton: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat(
-		"V:|-0-[secondActionButton]-0-|",
-				options: NSLayoutFormatOptions(rawValue: 0),
-				metrics: nil,
-				views: ["secondActionButton": secondActionButton])
+			var vConstraintsForMessageLabel = NSLayoutConstraint.FromVisualFormat(
+				"V:|-0-[messageLabel]-0-|", 0,new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { messageLabel }, new NSObject[] { new NSString("messageLabel") })
+			);
+
+			var vConstraintsForSeperateView = NSLayoutConstraint.FromVisualFormat(
+				"V:|-4-[seperateView]-4-|", 0,new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { seperateView }, new NSObject[] { new NSString("seperateView") })
+			);
+
+			var vConstraintsForActionButton = NSLayoutConstraint.FromVisualFormat(
+				"V:|-0-[actionButton]-0-|", 0,new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { actionButton }, new NSObject[] { new NSString("actionButton") })
+			);
+
+			var vConstraintsForSecondActionButton = NSLayoutConstraint.FromVisualFormat(
+				"V:|-0-[secondActionButton]-0-|", 0,new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { secondActionButton }, new NSObject[] { new NSString("secondActionButton") })
+			);
+
+			actionButtonWidthConstraint = NSLayoutConstraint.Create(actionButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, TTGSnackbar.snackbarActionButtonMinWidth);
+
+			secondActionButtonWidthConstraint = NSLayoutConstraint.Create(secondActionButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, TTGSnackbar.snackbarActionButtonMinWidth);
+
+			var vConstraintsForActivityIndicatorView = NSLayoutConstraint.FromVisualFormat(
+				"V:|-2-[activityIndicatorView]-2-|", 0,new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] { new NSString("activityIndicatorView") })
+			);
 
 
-		actionButtonWidthConstraint = NSLayoutConstraint.init(
-		item: actionButton, attribute: .Width, relatedBy: .Equal,
-				toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: TTGSnackbar.snackbarActionButtonMinWidth)
+			//todo fix constraint
+			//var hConstraintsForActivityIndicatorView = NSLayoutConstraint.FromVisualFormat(
+			//	"H:[activityIndicatorView(activityIndicatorWidth)]-2-|", 0,
+			//	NSDictionary.FromObjectsAndKeys(new NSObject[] { new NSString("activityIndicatorWidth") }, new NSObject[] { new NSNumber(Height - 4) }),
+			//	NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] { new NSString("activityIndicatorView") })
+			//);
 
 
-		secondActionButtonWidthConstraint = NSLayoutConstraint.init(
-		item: secondActionButton, attribute: .Width, relatedBy: .Equal,
-				toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: TTGSnackbar.snackbarActionButtonMinWidth)
+			actionButton.AddConstraint(actionButtonWidthConstraint);
+
+			secondActionButton.AddConstraint(secondActionButtonWidthConstraint);
 
 
-		let vConstraintsForActivityIndicatorView: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat(
-		"V:|-2-[activityIndicatorView]-2-|",
-				options: NSLayoutFormatOptions(rawValue: 0),
-				metrics: nil,
-				views: ["activityIndicatorView": activityIndicatorView])
+			this.AddConstraints(hConstraints);
 
+			this.AddConstraints(vConstraintsForMessageLabel);
 
-		let hConstraintsForActivityIndicatorView: [NSLayoutConstraint] = NSLayoutConstraint.constraintsWithVisualFormat(
-		"H:[activityIndicatorView(activityIndicatorWidth)]-2-|",
-				options: NSLayoutFormatOptions(rawValue: 0),
-				metrics: ["activityIndicatorWidth": height - 4],
-				views: ["activityIndicatorView": activityIndicatorView])
+			this.AddConstraints(vConstraintsForSeperateView);
 
+			this.AddConstraints(vConstraintsForActionButton);
 
-		actionButton.addConstraint(actionButtonWidthConstraint!)
+			this.AddConstraints(vConstraintsForSecondActionButton);
 
-		secondActionButton.addConstraint(secondActionButtonWidthConstraint!)
+			this.AddConstraints(vConstraintsForActivityIndicatorView);
 
-
-		self.addConstraints(hConstraints)
-
-		self.addConstraints(vConstraintsForMessageLabel)
-
-		self.addConstraints(vConstraintsForSeperateView)
-
-		self.addConstraints(vConstraintsForActionButton)
-
-		self.addConstraints(vConstraintsForSecondActionButton)
-
-		self.addConstraints(vConstraintsForActivityIndicatorView)
-
-		self.addConstraints(hConstraintsForActivityIndicatorView)
-
-	}
-
-	/**
-    Invalid the dismiss timer.
-    */
-	private func invalidDismissTimer()
-	{
-		dismissTimer?.invalidate()
-
-		dismissTimer = nil
-
-	}
-
-	/**
-    Dismiss.
-    
-    - parameter animated: If dismiss with animation.
-    */
-	private func dismissAnimated(animated: Bool)
-	{
-		invalidDismissTimer()
-
-		activityIndicatorView.stopAnimating()
-
-
-		let superViewWidth = CGRectGetWidth((superview?.frame)!)
-
-
-		if !animated {
-			dismissBlock ? (snackbar: self)
-            self.removeFromSuperview()
-
-			return
+			//this.AddConstraints(hConstraintsForActivityIndicatorView);
 
 		}
 
-		var animationBlock: (()->Void) ? = nil
+		/**
+		Invalid the dismiss timer.
+		*/
+		private void invalidDismissTimer()
+		{
+			dismissTimer.Invalidate();
+			dismissTimer = null;
+		}
 
+		/**
+		Dismiss.
+		
+		- parameter animated: If dismiss with animation.
+		*/
+		private void dismissAnimated(bool animated)
+		{
+			invalidDismissTimer();
 
-		switch animationType {
-			case .FadeInFadeOut:
-				animationBlock = {
-					self.alpha = 0.0
-	
+			activityIndicatorView.StopAnimating();
+
+			var superViewWidth = Superview.Frame.Width;
+
+			if (!animated)
+			{
+				TTGDismissBlock();
+				this.RemoveFromSuperview();
+				return;
 			}
-			case .SlideFromBottomBackToBottom:
-				bottomMarginConstraint?.constant = height
 
-		case .SlideFromBottomToTop:
-				animationBlock = {
-					self.alpha = 0.0
+			Action animationBlock = () => { };
 
+			switch (AnimationType)
+			{
+				case TTGSnackbarAnimationType.FadeInFadeOut:
+					animationBlock = () => { this.Alpha = 0; };
+					break;
+				case TTGSnackbarAnimationType.SlideFromBottomBackToBottom:
+					animationBlock = () => { bottomMarginConstraint.Constant = Height; };
+					break;
+				case TTGSnackbarAnimationType.SlideFromBottomToTop:
+					animationBlock = () => { this.Alpha = 0; bottomMarginConstraint.Constant = -Height - BottomMargin; };
+					break;
+				case TTGSnackbarAnimationType.SlideFromLeftToRight:
+					animationBlock = () => { leftMarginConstraint.Constant = LeftMargin + superViewWidth; rightMarginConstraint.Constant = -RightMargin + superViewWidth; };
+					break;
+				case TTGSnackbarAnimationType.SlideFromRightToLeft:
+					animationBlock = () =>
+					{
+						leftMarginConstraint.Constant = LeftMargin - superViewWidth;
+						rightMarginConstraint.Constant = -RightMargin - superViewWidth;
+					};
+					break;
+				case TTGSnackbarAnimationType.Flip:
+					//todo animationBlock = () => { this.Layer.Transform = CAT(CGFloat(M_PI_2), 1, 0, 0);}
+					break;
+			};
+
+
+			this.SetNeedsLayout();
+
+			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { TTGDismissBlock(); this.RemoveFromSuperview(); });
+		}
+
+
+		/**
+		Show.
+		*/
+		private void showWithAnimation()
+		{
+			Action animationBlock = () => { };
+
+			var superViewWidth = Superview.Frame.Width;
+
+			switch (AnimationType)
+			{
+				case TTGSnackbarAnimationType.FadeInFadeOut:
+					animationBlock = () => { this.Alpha = 0; this.SetNeedsLayout(); };
+					break;
+				case TTGSnackbarAnimationType.SlideFromBottomBackToBottom:
+				case TTGSnackbarAnimationType.SlideFromBottomToTop:
+					bottomMarginConstraint.Constant = Height;
+					this.LayoutIfNeeded();
+					break;
+				case TTGSnackbarAnimationType.SlideFromLeftToRight:
+					leftMarginConstraint.Constant = LeftMargin - superViewWidth;
+					rightMarginConstraint.Constant = -RightMargin - superViewWidth;
+					bottomMarginConstraint.Constant = -BottomMargin;
+					this.LayoutIfNeeded();
+					break;
+				case TTGSnackbarAnimationType.SlideFromRightToLeft:
+					leftMarginConstraint.Constant = LeftMargin + superViewWidth;
+					rightMarginConstraint.Constant = -RightMargin + superViewWidth;
+					bottomMarginConstraint.Constant = -BottomMargin;
+					this.LayoutIfNeeded();
+					break;
+				case TTGSnackbarAnimationType.Flip:
+					//todo animationBlock = () => { this.Layer.Transform = CAT(CGFloat(M_PI_2), 1, 0, 0);}
+					break;
+			};
+
+
+			// Final state
+			bottomMarginConstraint.Constant = -BottomMargin;
+
+			leftMarginConstraint.Constant = LeftMargin;
+
+			rightMarginConstraint.Constant = -RightMargin;
+
+
+			//todo spring velocitys
+			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { TTGDismissBlock(); this.RemoveFromSuperview(); });
+
+		}
+
+		/**
+		Action button.
+		*/
+		private void doAction(UIButton button)
+		{
+			// Call action block first
+			if (button == actionButton)
+			{
+				ActionBlock();
 			}
-				bottomMarginConstraint?.constant = -height - bottomMargin
+			else if (button == secondActionButton)
+			{
+				SecondActionBlock();
+			}
 
-		case .SlideFromLeftToRight:
-				leftMarginConstraint?.constant = leftMargin + superViewWidth
+			if (Duration == TTGSnackbarDuration.Forever && actionButton.Hidden == false)
+			{
+				actionButton.Hidden = true;
+				secondActionButton.Hidden = true;
 
-			rightMarginConstraint?.constant = -rightMargin + superViewWidth
+				seperateView.Hidden = true;
 
-		case .SlideFromRightToLeft:
-				leftMarginConstraint?.constant = leftMargin - superViewWidth
+				activityIndicatorView.Hidden = false;
 
-			rightMarginConstraint?.constant = -rightMargin - superViewWidth
-
-		case .Flip:
-				animationBlock = {
-					self.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI_2), 1, 0, 0)
-
+				activityIndicatorView.StartAnimating();
+			}
+			else
+			{
+				dismissAnimated(true);
 			}
 		}
-
-		self.setNeedsLayout()
-
-		UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.2, options: .CurveEaseIn,
-				animations: {
-			()->Void in
-                    animationBlock ? ()
-
-					self.layoutIfNeeded()
-
-				}) {
-			(finished)->Void in
-            self.dismissBlock ? (snackbar: self)
-            self.removeFromSuperview()
-
-		}
-	}
-
-	/**
-    Show.
-    */
-	private func showWithAnimation()
-	{
-		var animationBlock: (()->Void) ? = nil
-
-		let superViewWidth = CGRectGetWidth((superview?.frame)!)
-
-
-		switch animationType {
-			case .FadeInFadeOut:
-				self.alpha = 0.0
-	
-			self.layoutIfNeeded()
-	            // Animation
-				animationBlock = {
-					self.alpha = 1.0
-	
-			}
-			case .SlideFromBottomBackToBottom, .SlideFromBottomToTop:
-				bottomMarginConstraint?.constant = height
-
-			self.layoutIfNeeded()
-
-		case .SlideFromLeftToRight:
-				leftMarginConstraint?.constant = leftMargin - superViewWidth
-
-			rightMarginConstraint?.constant = -rightMargin - superViewWidth
-
-			bottomMarginConstraint?.constant = -bottomMargin
-
-			self.layoutIfNeeded()
-
-		case .SlideFromRightToLeft:
-				leftMarginConstraint?.constant = leftMargin + superViewWidth
-
-			rightMarginConstraint?.constant = -rightMargin + superViewWidth
-
-			bottomMarginConstraint?.constant = -bottomMargin
-
-			self.layoutIfNeeded()
-
-		case .Flip:
-				self.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI_2), 1, 0, 0)
-
-			self.layoutIfNeeded()
-			// Animation
-				animationBlock = {
-					self.layer.transform = CATransform3DMakeRotation(0, 1, 0, 0)
-
-			}
-		}
-
-		// Final state
-		bottomMarginConstraint?.constant = -bottomMargin
-
-		leftMarginConstraint?.constant = leftMargin
-
-		rightMarginConstraint?.constant = -rightMargin
-
-
-		UIView.animateWithDuration(animationDuration, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 5, options: .CurveEaseInOut,
-				animations: {
-			()->Void in
-                    animationBlock ? ()
-
-					self.layoutIfNeeded()
-
-				}, completion: nil)
-    }
-
-	/**
-    Action button.
-    */
-	func doAction(button: UIButton)
-	{
-		// Call action block first
-		button == actionButton ? actionBlock ? (snackbar: self) : secondActionBlock ? (snackbar: self)
-
-        // Show activity indicator
-        if duration == .Forever && actionButton.hidden == false {
-			actionButton.hidden = true
-
-			secondActionButton.hidden = true
-
-			seperateView.hidden = true
-
-			activityIndicatorView.hidden = false
-
-			activityIndicatorView.startAnimating()
-
-		}
-		else {
-			dismissAnimated(true)
-
-		}
-	}
 	}
 }
+
 

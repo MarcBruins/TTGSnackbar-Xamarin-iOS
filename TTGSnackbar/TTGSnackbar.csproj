@@ -6,7 +6,7 @@
     <ProjectGuid>{FBA5759B-F588-4EE1-9C1B-192638CBBBA7}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>TTGSnackbar</RootNamespace>
+    <RootNamespace>SnackbarTTG</RootNamespace>
     <AssemblyName>TTGSnackbar</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
   </PropertyGroup>
