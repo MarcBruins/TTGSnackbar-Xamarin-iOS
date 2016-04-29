@@ -218,12 +218,8 @@ namespace SnackBarTTG.Source
 		   */
 		public TTGSnackbar(string message, TTGSnackbarDuration duration) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
 		{
-			Frame = CoreGraphics.CGRect.FromLTRB(0, 0, 320, Height); //todo check if this is correct
-
 			this.Duration = duration;
-
 			this.Message = message;
-
 
 			configure();
 		}
@@ -240,14 +236,9 @@ namespace SnackBarTTG.Source
 		*/
 		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
 		{
-			
-
 			this.Duration = duration;
-
 			this.Message = message;
-
 			this.ActionText = actionText;
-
 			this.ActionBlock = ttgAction;
 
 			configure();
@@ -266,17 +257,11 @@ namespace SnackBarTTG.Source
 		*/
 		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
 		{
-
 			this.Duration = duration;
-
 			this.Message = message;
-
 			this.ActionText = actionText;
-
 			this.ActionBlock = ttgAction;
-
 			this.MessageTextFont = messageFont;
-
 			this.ActionTextFont = actionTextFont;
 
 			configure();
@@ -382,15 +367,6 @@ namespace SnackBarTTG.Source
 		public void dismiss()
 		{
 			this.dismissAnimated(true);
-
-			// On main thread
-			//dispatch_async(dispatch_get_main_queue()) {
-			//	()->Void in
-			//          self.dismissAnimated(true)
-
-			//}
-
-
 		}
 
 		/**
@@ -449,8 +425,6 @@ namespace SnackBarTTG.Source
 
 			this.AddSubview(activityIndicatorView);
 
-			//var viewsDictionary = NSDictionary.FromObjectsAndKeys(new NSObject[] { messageLabel, seperateView }, new NSObject[] { new NSString("messageLabel"), new NSString("seperateView") });
-
 			// Add constraints
 			var hConstraints = NSLayoutConstraint.FromVisualFormat(
 				"H:|-4-[messageLabel]-2-[seperateView(0.5)]-2-[actionButton]-0-[secondActionButton]-4-|",
@@ -493,17 +467,12 @@ namespace SnackBarTTG.Source
 				"V:|-2-[activityIndicatorView]-2-|", 0,new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] { new NSString("activityIndicatorView") })
 			);
 
-			//NSObject activityIndicatorWidth = new NSObject();
-
 			//todo fix constraint
 			var hConstraintsForActivityIndicatorView = NSLayoutConstraint.FromVisualFormat(
 				//"H:[activityIndicatorView(activityIndicatorWidth)]-2-|",
 				"H:[activityIndicatorView]-2-|",
 				0,
 				new NSDictionary(),
-				//NSDictionary.FromObjectsAndKeys(
-				//	new NSObject[] { activityIndicatorWidth },
-				//	new NSObject[] { new NSString((Height - 4).ToString()) }),
 				NSDictionary.FromObjectsAndKeys(
 					new NSObject[] {  activityIndicatorView },
                     new NSObject[] {  new NSString("activityIndicatorView") })
@@ -628,7 +597,6 @@ namespace SnackBarTTG.Source
 			leftMarginConstraint.Constant = LeftMargin;
 			rightMarginConstraint.Constant = -RightMargin;
 
-			//todo spring velocitys
 			UIView.AnimateNotify(
 					AnimationDuration,
 					0,
