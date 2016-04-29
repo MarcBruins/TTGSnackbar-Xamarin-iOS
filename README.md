@@ -36,19 +36,19 @@ snackbar.Show();
 ## Show a simple message with two action buttons
 ![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_9.png)
 ```
-let snackbar: TTGSnackbar = TTGSnackbar.init(message: "Two actions !", duration: .Long)
+var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Middle);
 
 // Action 1
-snackbar.actionText = "Yes"
-snackbar.actionTextColor = UIColor.greenColor()
-snackbar.actionBlock = { (snackbar) in NSLog("Click Yes !") }
+snackbar.ActionText = "Yes";
+snackbar.ActionTextColor = UIColor.Green;
+snackbar.ActionBlock = (t) => { Console.WriteLine("clicked yes"); };
 
 // Action 2
-snackbar.secondActionText = "No"
-snackbar.secondActionTextColor = UIColor.yellowColor()
-snackbar.secondActionBlock = { (snackbar) in NSLog("Click No !") }
+snackbar.SecondActionText = "No";
+snackbar.SecondActionTextColor = UIColor.Purple;
+snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
 
-snackbar.show()
+snackbar.Show();
 ```
 
 # Customization
@@ -79,7 +79,7 @@ When you set `Forever`, the snackbar will show an activity indicator after user 
 `actionBlock: TTGActionBlock?` will be called when user click the action button.
 ```
 // TTGActionBlock definition.
-public typealias TTGActionBlock = (snackbar: TTGSnackbar) -> Void
+public Action<TTGSnackbar> ActionBlock
 ```
 
 ### Second action title, color, font and callback
