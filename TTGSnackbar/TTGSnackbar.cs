@@ -68,7 +68,7 @@ namespace SnackBarTTG.Source
 		public TTGSnackbarDuration Duration = TTGSnackbarDuration.Short;
 
 		// Snackbar animation type. Default is SlideFromBottomBackToBottom.
-		public TTGSnackbarAnimationType AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
+		public TTGSnackbarAnimationType AnimationType = TTGSnackbarAnimationType.SlideFromLeftToRight;
 
 		// Show and hide animation duration. Default is 0.3
 		public float AnimationDuration = 0.3f;
@@ -154,14 +154,14 @@ namespace SnackBarTTG.Source
 		public string ActionText
 		{
 			get { return _actionText; }
-			set { _actionText = value; this.actionButton.SetTitle(_actionText, UIControlState.Normal); }
+			set { _actionText = value; if (this.actionButton != null) { this.actionButton.SetTitle(_actionText, UIControlState.Normal); } }
 		}
 
 		private string _secondActionText;
 		public string SecondActionText
 		{
 			get { return _secondActionText; }
-			set { _secondActionText = value; this.secondActionButton.SetTitle(_actionText, UIControlState.Normal); }
+			set { _secondActionText = value; if (this.secondActionButton != null) { this.secondActionButton.SetTitle(_actionText, UIControlState.Normal); } }
 		}
 
 		// Action button title color. Default is white.
@@ -302,22 +302,23 @@ namespace SnackBarTTG.Source
 			dismissTimer = NSTimer.CreateScheduledTimer((int)Duration, (t) => dismiss());
 
 			// Show or hide action button
-			if (actionButton.Hidden)
-				ActionText = String.Empty;
-			else
-				ActionBlock = null;
 
-			if (secondActionButton.Hidden)
+			if (ActionBlock == null)
+			{
+				ActionText = String.Empty;
+				actionButton.Hidden = true;
+			}
+
+			if (secondActionButton == null)
+			{
 				SecondActionText = String.Empty;
-			else
-				SecondActionBlock = null;
+				secondActionButton.Hidden = true;
+			}
 
 			seperateView.Hidden = actionButton.Hidden;
 
 			actionButtonWidthConstraint.Constant = actionButton.Hidden ? 0 : (secondActionButton.Hidden ? TTGSnackbar.snackbarActionButtonMaxWidth : TTGSnackbar.snackbarActionButtonMinWidth);
-
 			secondActionButtonWidthConstraint.Constant = secondActionButton.Hidden ? 0 : (actionButton.Hidden ? TTGSnackbar.snackbarActionButtonMaxWidth : TTGSnackbar.snackbarActionButtonMinWidth);
-
 
 			this.LayoutIfNeeded();
 
@@ -342,7 +343,7 @@ namespace SnackBarTTG.Source
 					localSuperView,
 					NSLayoutAttribute.Left,
 					1,
-					Height);
+					LeftMargin);
 
 				rightMarginConstraint = NSLayoutConstraint.Create(
 					this,
@@ -351,7 +352,7 @@ namespace SnackBarTTG.Source
 					localSuperView,
 					NSLayoutAttribute.Right,
 					1,
-					Height);
+					-RightMargin);
 
 				bottomMarginConstraint = NSLayoutConstraint.Create(
 					this,
@@ -360,7 +361,7 @@ namespace SnackBarTTG.Source
 					localSuperView,
 					NSLayoutAttribute.Bottom,
 					1,
-					Height);
+					-BottomMargin);
 
 				// Avoid the "UIView-Encapsulated-Layout-Height" constraint conflicts
 				// http://stackoverflow.com/questions/25059443/what-is-nslayoutconstraint-uiview-encapsulated-layout-height-and-how-should-i
@@ -382,7 +383,7 @@ namespace SnackBarTTG.Source
 		}
 
 		/**
-		Dismiss the snackbar manually.
+		 * Dismiss the snackbar manually.
 		*/
 		public void dismiss()
 		{
@@ -399,95 +400,60 @@ namespace SnackBarTTG.Source
 		}
 
 		/**
-		Init configuration.
+		 * Init configuration.
 		*/
 		private void configure()
 		{
 			this.TranslatesAutoresizingMaskIntoConstraints = false;
-
-			this.BackgroundColor = UIColor.Orange;
-
+			this.BackgroundColor = UIColor.DarkGray;
 			this.Layer.CornerRadius = CornerRadius;
-
 			this.Layer.MasksToBounds = true;
 
-
 			messageLabel = new UILabel();
-
 			messageLabel.TranslatesAutoresizingMaskIntoConstraints = false;
-
 			messageLabel.TextColor = UIColor.White;
-
 			messageLabel.Font = MessageTextFont;
-
-			messageLabel.BackgroundColor = UIColor.Clear; ;
-
+			messageLabel.BackgroundColor = UIColor.Clear;
 			messageLabel.LineBreakMode = UILineBreakMode.CharacterWrap;
-
 			messageLabel.Lines = 2;
-
 			messageLabel.TextAlignment = UITextAlignment.Left;
-
 			messageLabel.Text = Message;
 
 			this.AddSubview(messageLabel);
 
-
 			actionButton = new UIButton();
-
 			actionButton.TranslatesAutoresizingMaskIntoConstraints = false;
-
 			actionButton.BackgroundColor = UIColor.Clear;
-
 			actionButton.TitleLabel.Font = ActionTextFont;
-
 			actionButton.TitleLabel.AdjustsFontSizeToFitWidth = true;
-
 			actionButton.SetTitle(ActionText, UIControlState.Normal);
-
 			actionButton.SetTitleColor(ActionTextColor, UIControlState.Normal);
-
 			actionButton.TouchUpInside += (s, e) => doAction(actionButton);
 
 			this.AddSubview(actionButton);
 
-
 			secondActionButton = new UIButton();
-
 			secondActionButton.TranslatesAutoresizingMaskIntoConstraints = false;
-
 			secondActionButton.BackgroundColor = UIColor.Clear;
-
 			secondActionButton.TitleLabel.Font = SecondActionTextFont;
-
 			secondActionButton.TitleLabel.AdjustsFontSizeToFitWidth = true;
-
 			secondActionButton.SetTitle(SecondActionText, UIControlState.Normal);
-
 			secondActionButton.SetTitleColor(SecondActionTextColor, UIControlState.Normal);
-
 			secondActionButton.TouchUpInside += (s, e) => doAction(secondActionButton);
 
 			this.AddSubview(secondActionButton);
 
-
 			seperateView = new UIView();
-
 			seperateView.TranslatesAutoresizingMaskIntoConstraints = false;
-
 			seperateView.BackgroundColor = UIColor.Gray;
 
 			this.AddSubview(seperateView);
 
-
 			activityIndicatorView = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.White);
-
 			activityIndicatorView.TranslatesAutoresizingMaskIntoConstraints = false;
-
 			activityIndicatorView.StopAnimating();
 
 			this.AddSubview(activityIndicatorView);
-
 
 			//var viewsDictionary = NSDictionary.FromObjectsAndKeys(new NSObject[] { messageLabel, seperateView }, new NSObject[] { new NSString("messageLabel"), new NSString("seperateView") });
 
@@ -508,7 +474,6 @@ namespace SnackBarTTG.Source
 					new NSString("secondActionButton")
 				})
 			);
-
 
 			var vConstraintsForMessageLabel = NSLayoutConstraint.FromVisualFormat(
 				"V:|-0-[messageLabel]-0-|", 0,new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { messageLabel }, new NSObject[] { new NSString("messageLabel") })
@@ -534,7 +499,6 @@ namespace SnackBarTTG.Source
 				"V:|-2-[activityIndicatorView]-2-|", 0,new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] { new NSString("activityIndicatorView") })
 			);
 
-
 			//NSObject activityIndicatorWidth = new NSObject();
 
 			//todo fix constraint
@@ -552,26 +516,16 @@ namespace SnackBarTTG.Source
 				//NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] {  })
 			);
 
-
 			actionButton.AddConstraint(actionButtonWidthConstraint);
-
 			secondActionButton.AddConstraint(secondActionButtonWidthConstraint);
 
-
 			this.AddConstraints(hConstraints);
-
 			this.AddConstraints(vConstraintsForMessageLabel);
-
 			this.AddConstraints(vConstraintsForSeperateView);
-
 			this.AddConstraints(vConstraintsForActionButton);
-
 			this.AddConstraints(vConstraintsForSecondActionButton);
-
 			this.AddConstraints(vConstraintsForActivityIndicatorView);
-
 			this.AddConstraints(hConstraintsForActivityIndicatorView);
-
 		}
 
 		/**
@@ -634,7 +588,6 @@ namespace SnackBarTTG.Source
 					break;
 			};
 
-
 			this.SetNeedsLayout();
 
 			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { if (TTGDismissBlock != null) { TTGDismissBlock();}; this.RemoveFromSuperview(); });
@@ -642,12 +595,11 @@ namespace SnackBarTTG.Source
 
 
 		/**
-		Show.
+		 * Show.
 		*/
 		private void showWithAnimation()
 		{
 			Action animationBlock = () => { this.LayoutIfNeeded(); };
-
 			var superViewWidth = Superview.Frame.Width;
 
 			switch (AnimationType)
@@ -657,7 +609,7 @@ namespace SnackBarTTG.Source
 					break;
 				case TTGSnackbarAnimationType.SlideFromBottomBackToBottom:
 				case TTGSnackbarAnimationType.SlideFromBottomToTop:
-					bottomMarginConstraint.Constant = Height;
+					bottomMarginConstraint.Constant = -BottomMargin;
 					this.LayoutIfNeeded();
 					break;
 				case TTGSnackbarAnimationType.SlideFromLeftToRight:
@@ -679,9 +631,7 @@ namespace SnackBarTTG.Source
 
 			// Final state
 			bottomMarginConstraint.Constant = -BottomMargin;
-
 			leftMarginConstraint.Constant = LeftMargin;
-
 			rightMarginConstraint.Constant = -RightMargin;
 
 			//todo spring velocitys

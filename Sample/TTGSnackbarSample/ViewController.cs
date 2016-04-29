@@ -14,11 +14,18 @@ namespace TTGSnackbarSample
 		public override void ViewDidAppear(bool animated)
 		{
 			base.ViewDidAppear(animated);
+		}
 
-			var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long);
+		partial void buttonClicked(UIButton sender)
+		{
+			var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long, "Cancel", () => { cancel();});
+			snackbar.AnimationType = TTGSnackbarAnimationType.SlideFromBottomToTop;
 			snackbar.Show();
+		}
 
-			this.Add(snackbar);
+		public void cancel()
+		{
+			//do something
 		}
 
 		public override void ViewDidLoad()
