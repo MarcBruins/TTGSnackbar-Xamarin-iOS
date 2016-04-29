@@ -15,6 +15,8 @@ namespace TTGSnackbarSample
 		{
 			base.ViewDidAppear(animated);
 
+			var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long);
+			snackbar.Show();
 		}
 
 		public override void ViewDidLoad()
@@ -22,8 +24,6 @@ namespace TTGSnackbarSample
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 
-			var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long);
-			snackbar.Show();
 		}
 
 		public override void DidReceiveMemoryWarning()

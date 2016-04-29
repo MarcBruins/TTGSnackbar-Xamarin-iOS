@@ -68,7 +68,7 @@ namespace SnackBarTTG.Source
 		public TTGSnackbarDuration Duration = TTGSnackbarDuration.Short;
 
 		// Snackbar animation type. Default is SlideFromBottomBackToBottom.
-		public TTGSnackbarAnimationType AnimationType = TTGSnackbarAnimationType.SlideFromBottomBackToBottom;
+		public TTGSnackbarAnimationType AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
 
 		// Show and hide animation duration. Default is 0.3
 		public float AnimationDuration = 0.3f;
@@ -321,9 +321,10 @@ namespace SnackBarTTG.Source
 
 			this.LayoutIfNeeded();
 
-			if (Superview == UIApplication.SharedApplication.KeyWindow)
+			var localSuperView = UIApplication.SharedApplication.KeyWindow;
+			if (localSuperView != null)
 			{
-				Superview.Add(this);
+				localSuperView.AddSubview(this);
 
 				heightConstraint = NSLayoutConstraint.Create(
 					this,
@@ -338,8 +339,8 @@ namespace SnackBarTTG.Source
 					this,
 					NSLayoutAttribute.Left,
 					NSLayoutRelation.Equal,
-					Superview,
-					NSLayoutAttribute.NoAttribute,
+					localSuperView,
+					NSLayoutAttribute.Left,
 					1,
 					Height);
 
@@ -347,8 +348,8 @@ namespace SnackBarTTG.Source
 					this,
 					NSLayoutAttribute.Right,
 					NSLayoutRelation.Equal,
-					Superview,
-					NSLayoutAttribute.NoAttribute,
+					localSuperView,
+					NSLayoutAttribute.Right,
 					1,
 					Height);
 
@@ -356,8 +357,8 @@ namespace SnackBarTTG.Source
 					this,
 					NSLayoutAttribute.Bottom,
 					NSLayoutRelation.Equal,
-					Superview,
-					NSLayoutAttribute.NoAttribute,
+					localSuperView,
+					NSLayoutAttribute.Bottom,
 					1,
 					Height);
 
@@ -367,9 +368,9 @@ namespace SnackBarTTG.Source
 				rightMarginConstraint.Priority = 999;
 
 				this.AddConstraint(heightConstraint);
-				Superview.AddConstraint(leftMarginConstraint);
-				Superview.AddConstraint(rightMarginConstraint);
-				Superview.AddConstraint(bottomMarginConstraint);
+				localSuperView.AddConstraint(leftMarginConstraint);
+				localSuperView.AddConstraint(rightMarginConstraint);
+				localSuperView.AddConstraint(bottomMarginConstraint);
 
 				// Show 
 				showWithAnimation();
@@ -534,12 +535,22 @@ namespace SnackBarTTG.Source
 			);
 
 
+			//NSObject activityIndicatorWidth = new NSObject();
+
 			//todo fix constraint
-			//var hConstraintsForActivityIndicatorView = NSLayoutConstraint.FromVisualFormat(
-			//	"H:[activityIndicatorView(activityIndicatorWidth)]-2-|", 0,
-			//	NSDictionary.FromObjectsAndKeys(new NSObject[] { new NSString("activityIndicatorWidth") }, new NSObject[] { new NSNumber(Height - 4) }),
-			//	NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] { new NSString("activityIndicatorView") })
-			//);
+			var hConstraintsForActivityIndicatorView = NSLayoutConstraint.FromVisualFormat(
+				//"H:[activityIndicatorView(activityIndicatorWidth)]-2-|",
+				"H:[activityIndicatorView]-2-|",
+				0,
+				new NSDictionary(),
+				//NSDictionary.FromObjectsAndKeys(
+				//	new NSObject[] { activityIndicatorWidth },
+				//	new NSObject[] { new NSString((Height - 4).ToString()) }),
+				NSDictionary.FromObjectsAndKeys(
+					new NSObject[] {  activityIndicatorView },
+                    new NSObject[] {  new NSString("activityIndicatorView") })
+				//NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] {  })
+			);
 
 
 			actionButton.AddConstraint(actionButtonWidthConstraint);
@@ -559,7 +570,7 @@ namespace SnackBarTTG.Source
 
 			this.AddConstraints(vConstraintsForActivityIndicatorView);
 
-			//this.AddConstraints(hConstraintsForActivityIndicatorView);
+			this.AddConstraints(hConstraintsForActivityIndicatorView);
 
 		}
 
@@ -583,7 +594,10 @@ namespace SnackBarTTG.Source
 
 			activityIndicatorView.StopAnimating();
 
-			var superViewWidth = Superview.Frame.Width;
+			nfloat superViewWidth = 0;
+
+			if(Superview != null)
+				superViewWidth = Superview.Frame.Width;
 
 			if (!animated)
 			{
@@ -623,7 +637,7 @@ namespace SnackBarTTG.Source
 
 			this.SetNeedsLayout();
 
-			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { TTGDismissBlock(); this.RemoveFromSuperview(); });
+			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { if (TTGDismissBlock != null) { TTGDismissBlock();}; this.RemoveFromSuperview(); });
 		}
 
 
@@ -632,7 +646,7 @@ namespace SnackBarTTG.Source
 		*/
 		private void showWithAnimation()
 		{
-			Action animationBlock = () => { };
+			Action animationBlock = () => { this.LayoutIfNeeded(); };
 
 			var superViewWidth = Superview.Frame.Width;
 
@@ -671,9 +685,16 @@ namespace SnackBarTTG.Source
 
 			rightMarginConstraint.Constant = -RightMargin;
 
-
 			//todo spring velocitys
-			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { TTGDismissBlock(); this.RemoveFromSuperview(); });
+			UIView.AnimateNotify(
+					AnimationDuration,
+					0,
+					0.7f,
+					5f,
+					UIViewAnimationOptions.CurveEaseIn, 
+	              	animationBlock, 
+	                null
+				);
 
 		}
 
