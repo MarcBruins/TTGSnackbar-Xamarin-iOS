@@ -26,15 +26,11 @@ snackbar.Show();
 ## Show a simple message with a long running action
 ![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_5.png)
 ```
-let snackbar = TTGSnackbar.init(message: "Message", duration: .Forever, actionText: "Action")
-{ (snackbar) -> Void in
-    NSLog("Click action!")
-    // Dismiss manually after 3 seconds
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(3 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-        snackbar.dismiss()
-    }
-}      
-snackbar.show()
+var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Forever, "Cancel", async (s) => {
+				await Task.Delay(3000);
+				s.dismiss();
+			});
+snackbar.Show();
 ```
 
 ## Show a simple message with two action buttons
