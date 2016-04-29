@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using SnackBarTTG.Source;
 using UIKit;
 
@@ -18,8 +19,18 @@ namespace TTGSnackbarSample
 
 		partial void buttonClicked(UIButton sender)
 		{
-			var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long, "Cancel", () => { cancel();});
-			snackbar.AnimationType = TTGSnackbarAnimationType.SlideFromBottomToTop;
+			var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Middle);
+
+			// Action 1
+			snackbar.ActionText = "Yes";
+			snackbar.ActionTextColor = UIColor.Green;
+			snackbar.ActionBlock = (t) => { Console.WriteLine("clicked yes"); };
+
+			// Action 2
+			snackbar.SecondActionText = "No";
+			snackbar.SecondActionTextColor = UIColor.Purple;
+			snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
+
 			snackbar.Show();
 		}
 

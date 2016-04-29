@@ -52,17 +52,11 @@ namespace SnackBarTTG.Source
 		// Snackbar action button min width.
 		private const float snackbarActionButtonMinWidth = 44;
 
-		// Action callback closure definition.
-		public Action TTGActionBlock { get; set; }
-
-		// Dismiss callback closure definition.
-		public Action TTGDismissBlock { get; set; }
-
 		// Action callback.
-		public Action ActionBlock { get; set; }
+		public Action<TTGSnackbar> ActionBlock { get; set; }
 
 		// Second action block
-		public Action SecondActionBlock { get; set; }
+		public Action<TTGSnackbar> SecondActionBlock { get; set; }
 
 		// Snackbar display duration. Default is Short - 1 second.
 		public TTGSnackbarDuration Duration = TTGSnackbarDuration.Short;
@@ -161,7 +155,7 @@ namespace SnackBarTTG.Source
 		public string SecondActionText
 		{
 			get { return _secondActionText; }
-			set { _secondActionText = value; if (this.secondActionButton != null) { this.secondActionButton.SetTitle(_actionText, UIControlState.Normal); } }
+			set { _secondActionText = value; if (this.secondActionButton != null) { this.secondActionButton.SetTitle(_secondActionText, UIControlState.Normal); } }
 		}
 
 		// Action button title color. Default is white.
@@ -244,7 +238,7 @@ namespace SnackBarTTG.Source
 		
 		- returns: Void
 		*/
-		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
+		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
 		{
 			
 
@@ -270,7 +264,7 @@ namespace SnackBarTTG.Source
 		- parameter actionBlock:      Action callback closure.
 		- returns: Void
 		*/
-		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
+		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
 		{
 
 			this.Duration = duration;
@@ -555,7 +549,7 @@ namespace SnackBarTTG.Source
 
 			if (!animated)
 			{
-				TTGDismissBlock();
+				ActionBlock(this);
 				this.RemoveFromSuperview();
 				return;
 			}
@@ -590,7 +584,7 @@ namespace SnackBarTTG.Source
 
 			this.SetNeedsLayout();
 
-			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { if (TTGDismissBlock != null) { TTGDismissBlock();}; this.RemoveFromSuperview(); });
+			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { if (ActionBlock != null) { ActionBlock(this);}; this.RemoveFromSuperview(); });
 		}
 
 
@@ -654,11 +648,11 @@ namespace SnackBarTTG.Source
 			// Call action block first
 			if (button == actionButton)
 			{
-				ActionBlock();
+				ActionBlock(this);
 			}
 			else if (button == secondActionButton)
 			{
-				SecondActionBlock();
+				SecondActionBlock(this);
 			}
 
 			if (Duration == TTGSnackbarDuration.Forever && actionButton.Hidden == false)
