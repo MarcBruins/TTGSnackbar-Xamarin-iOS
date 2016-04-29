@@ -17,6 +17,8 @@ namespace TTGSnackbarSample
 
 			var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long);
 			snackbar.Show();
+
+			this.Add(snackbar);
 		}
 
 		public override void ViewDidLoad()

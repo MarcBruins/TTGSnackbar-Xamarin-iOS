@@ -230,6 +230,7 @@ namespace SnackBarTTG.Source
 
 			this.Message = message;
 
+
 			configure();
 		}
 
@@ -243,9 +244,9 @@ namespace SnackBarTTG.Source
 		
 		- returns: Void
 		*/
-		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action ttgAction) : base()
+		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
 		{
-			Frame = CoreGraphics.CGRect.FromLTRB(0, 0, 320, Height); //todo check if this is correct
+			
 
 			this.Duration = duration;
 
@@ -269,9 +270,8 @@ namespace SnackBarTTG.Source
 		- parameter actionBlock:      Action callback closure.
 		- returns: Void
 		*/
-		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action ttgAction) : base()
+		public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
 		{
-			Frame = CoreGraphics.CGRect.FromLTRB(0, 0, 320, Height); //todo check if this is correct
 
 			this.Duration = duration;
 
@@ -405,7 +405,7 @@ namespace SnackBarTTG.Source
 		{
 			this.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			this.BackgroundColor = UIColor.FromRGBA(255, 255, 255, 255 * 0.8f);
+			this.BackgroundColor = UIColor.Orange;
 
 			this.Layer.CornerRadius = CornerRadius;
 
@@ -677,7 +677,6 @@ namespace SnackBarTTG.Source
 					break;
 			};
 
-
 			// Final state
 			bottomMarginConstraint.Constant = -BottomMargin;
 
@@ -691,11 +690,10 @@ namespace SnackBarTTG.Source
 					0,
 					0.7f,
 					5f,
-					UIViewAnimationOptions.CurveEaseIn, 
+					UIViewAnimationOptions.CurveEaseInOut, 
 	              	animationBlock, 
 	                null
 				);
-
 		}
 
 		/**
