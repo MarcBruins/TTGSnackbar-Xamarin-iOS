@@ -1,6 +1,7 @@
 # TTGSnackbar-Xamarin-iOS
-This is a port of https://github.com/zekunyan/TTGSnackbar/. All credits go to zekunynan.
-![Alt text](/xamarin-snackbar-demo.png "Screenshot")
+A C#/Xamarin based implementation of the Android Snackbar for iOS
+
+![Screenshot](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_8.gif)
 # About
 TTGSnackbar is useful for showing a brief message at the bottom of the screen with an action button.  
 It appears above all other elements on screen and only one can be displayed at a time.  
@@ -115,3 +116,8 @@ The default value of `animationType` is `SlideFromBottomBackToBottom`, which is 
 
 ### Corner radius
 `cornerRadius: CGFloat` defines the corner radius of snackbar.
+
+
+# Credits
+
+This is a port of https://github.com/zekunyan/TTGSnackbar/. All credits go to zekunynan.
