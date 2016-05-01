@@ -19,7 +19,9 @@ namespace TTGSnackbarSample
 
 		partial void buttonClicked(UIButton sender)
 		{
-			var snackbar = new TTGSnackbar("Hello Xamarin snackbar", TTGSnackbarDuration.Forever);
+			var snackbar = new TTGSnackbar("Hello Xamarin snackbar", TTGSnackbarDuration.Long);
+
+			snackbar.AnimationType = TTGSnackbarAnimationType.SlideFromRightToLeft;
 
 			// Action 1
 			snackbar.ActionText = "Yes";
