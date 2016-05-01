@@ -19,7 +19,7 @@ namespace TTGSnackbarSample
 
 		partial void buttonClicked(UIButton sender)
 		{
-			var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Middle);
+			var snackbar = new TTGSnackbar("Hello Xamarin snackbar", TTGSnackbarDuration.Forever);
 
 			// Action 1
 			snackbar.ActionText = "Yes";
@@ -28,7 +28,7 @@ namespace TTGSnackbarSample
 
 			// Action 2
 			snackbar.SecondActionText = "No";
-			snackbar.SecondActionTextColor = UIColor.Purple;
+			snackbar.SecondActionTextColor = UIColor.Magenta;
 			snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
 
 			snackbar.Show();
