@@ -21,7 +21,7 @@ namespace TTGSnackbarSample
 		{
 			var snackbar = new TTGSnackbar("Hello Xamarin snackbar", TTGSnackbarDuration.Long);
 
-			snackbar.AnimationType = TTGSnackbarAnimationType.SlideFromRightToLeft;
+			snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
 
 			// Action 1
 			snackbar.ActionText = "Yes";

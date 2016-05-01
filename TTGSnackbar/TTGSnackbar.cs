@@ -568,7 +568,10 @@ namespace SnackBarTTG.Source
 			switch (AnimationType)
 			{
 				case TTGSnackbarAnimationType.FadeInFadeOut:
-					animationBlock = () => { this.Alpha = 0; this.SetNeedsLayout(); };
+					this.Alpha = 0;
+					this.SetNeedsLayout();
+
+					animationBlock = () => { this.Alpha = 1; };
 					break;
 				case TTGSnackbarAnimationType.SlideFromBottomBackToBottom:
 				case TTGSnackbarAnimationType.SlideFromBottomToTop:
