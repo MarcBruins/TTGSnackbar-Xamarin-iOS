@@ -1,6 +1,6 @@
 # TTGSnackbar-Xamarin-iOS
 This is a port of https://github.com/zekunyan/TTGSnackbar/. All credits go to zekunynan.
-
+![Alt text](/xamarin-snackbar-demo.png "Screenshot")
 # About
 TTGSnackbar is useful for showing a brief message at the bottom of the screen with an action button.  
 It appears above all other elements on screen and only one can be displayed at a time.  
