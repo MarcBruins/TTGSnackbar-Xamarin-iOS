@@ -1,5 +1,5 @@
 # TTGSnackbar-Xamarin-iOS
-A C#/Xamarin based implementation of the Android Snackbar for iOS
+A C#/Xamarin based implementation of the Android Snackbar for iOS.
 
 ![Screenshot](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_8.gif)
 # About
