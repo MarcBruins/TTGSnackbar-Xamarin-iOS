@@ -91,14 +91,14 @@ namespace SnackBarTTG.Source
 		public float LeftMargin
 		{
 			get { return _leftMargin; }
-			set { _leftMargin = value; leftMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); }
+			set { _leftMargin = value; if (leftMarginConstraint != null) { leftMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); } }
 		}
 
 		private float _rightMargin = 4;
 		public float RightMargin
 		{
 			get { return _rightMargin; }
-			set { _rightMargin = value; rightMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); }
+			set { _rightMargin = value; if (rightMarginConstraint != null) { rightMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); } }
 		}
 
 		/// Bottom margin. Default is 4
@@ -106,14 +106,14 @@ namespace SnackBarTTG.Source
 		public float BottomMargin
 		{
 			get { return _bottomMargin; }
-			set { _bottomMargin = value; bottomMarginConstraint.Constant = _bottomMargin; this.LayoutIfNeeded(); }
+			set { _bottomMargin = value; if (bottomMarginConstraint != null) { bottomMarginConstraint.Constant = _bottomMargin; this.LayoutIfNeeded(); } }
 		}
 
 		private float _height = 44;
 		public float Height
 		{
 			get { return _height; }
-			set { _height = value; heightConstraint.Constant = _height; this.LayoutIfNeeded(); }
+			set { _height = value; if (heightConstraint != null) { heightConstraint.Constant = _height; this.LayoutIfNeeded(); } }
 		}
 
 		private string _message;
