@@ -58,6 +58,9 @@ namespace SnackBarTTG.Source
 		// Second action block
 		public Action<TTGSnackbar> SecondActionBlock { get; set; }
 
+		// Dismiss block
+		public Action<TTGSnackbar> DismissBlock { get; set; }
+
 		// Snackbar display duration. Default is Short - 1 second.
 		public TTGSnackbarDuration Duration = TTGSnackbarDuration.Short;
 
@@ -516,13 +519,12 @@ namespace SnackBarTTG.Source
 
 			nfloat superViewWidth = 0;
 
-			if(Superview != null)
+			if (Superview != null)
 				superViewWidth = Superview.Frame.Width;
 
 			if (!animated)
 			{
-				ActionBlock(this);
-				this.RemoveFromSuperview();
+				DismissAndPerformAction();
 				return;
 			}
 
@@ -556,9 +558,22 @@ namespace SnackBarTTG.Source
 
 			this.SetNeedsLayout();
 
-			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { if (ActionBlock != null) { ActionBlock(this);}; this.RemoveFromSuperview(); });
+			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, DismissAndPerformAction);
 		}
 
+		void DismissAndPerformAction()
+		{
+			if (DismissBlock != null)
+			{
+				DismissBlock(this);
+			}
+			else if (ActionBlock != null)
+			{
+				ActionBlock(this);
+			}
+
+			this.RemoveFromSuperview();
+		}
 
 		/**
 		 * Show.
