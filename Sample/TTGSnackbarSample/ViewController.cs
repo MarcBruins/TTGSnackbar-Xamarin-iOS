@@ -33,6 +33,9 @@ namespace TTGSnackbarSample
 			snackbar.SecondActionTextColor = UIColor.Magenta;
 			snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
 
+			// Dissmiss Callback
+			snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
+
 			snackbar.Show();
 		}
 
