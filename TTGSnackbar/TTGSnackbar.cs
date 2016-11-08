@@ -496,8 +496,11 @@ namespace SnackBarTTG.Source
 		*/
 		private void invalidDismissTimer()
 		{
-			dismissTimer.Invalidate();
-			dismissTimer = null;
+			if (dismissTimer != null)
+			{
+				dismissTimer.Invalidate();
+				dismissTimer = null;
+			}
 		}
 
 		/**
