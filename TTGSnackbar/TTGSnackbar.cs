@@ -58,6 +58,9 @@ namespace SnackBarTTG.Source
 		// Second action block
 		public Action<TTGSnackbar> SecondActionBlock { get; set; }
 
+		// Dismiss block
+		public Action<TTGSnackbar> DismissBlock { get; set; }
+
 		// Snackbar display duration. Default is Short - 1 second.
 		public TTGSnackbarDuration Duration = TTGSnackbarDuration.Short;
 
@@ -91,14 +94,14 @@ namespace SnackBarTTG.Source
 		public float LeftMargin
 		{
 			get { return _leftMargin; }
-			set { _leftMargin = value; leftMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); }
+			set { _leftMargin = value; if (leftMarginConstraint != null) { leftMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); } }
 		}
 
 		private float _rightMargin = 4;
 		public float RightMargin
 		{
 			get { return _rightMargin; }
-			set { _rightMargin = value; rightMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); }
+			set { _rightMargin = value; if (rightMarginConstraint != null) { rightMarginConstraint.Constant = _leftMargin; this.LayoutIfNeeded(); } }
 		}
 
 		/// Bottom margin. Default is 4
@@ -106,14 +109,14 @@ namespace SnackBarTTG.Source
 		public float BottomMargin
 		{
 			get { return _bottomMargin; }
-			set { _bottomMargin = value; bottomMarginConstraint.Constant = _bottomMargin; this.LayoutIfNeeded(); }
+			set { _bottomMargin = value; if (bottomMarginConstraint != null) { bottomMarginConstraint.Constant = _bottomMargin; this.LayoutIfNeeded(); } }
 		}
 
 		private float _height = 44;
 		public float Height
 		{
 			get { return _height; }
-			set { _height = value; heightConstraint.Constant = _height; this.LayoutIfNeeded(); }
+			set { _height = value; if (heightConstraint != null) { heightConstraint.Constant = _height; this.LayoutIfNeeded(); } }
 		}
 
 		private string _message;
@@ -496,8 +499,11 @@ namespace SnackBarTTG.Source
 		*/
 		private void invalidDismissTimer()
 		{
-			dismissTimer.Invalidate();
-			dismissTimer = null;
+			if (dismissTimer != null)
+			{
+				dismissTimer.Invalidate();
+				dismissTimer = null;
+			}
 		}
 
 		/**
@@ -513,13 +519,12 @@ namespace SnackBarTTG.Source
 
 			nfloat superViewWidth = 0;
 
-			if(Superview != null)
+			if (Superview != null)
 				superViewWidth = Superview.Frame.Width;
 
 			if (!animated)
 			{
-				ActionBlock(this);
-				this.RemoveFromSuperview();
+				DismissAndPerformAction();
 				return;
 			}
 
@@ -553,9 +558,22 @@ namespace SnackBarTTG.Source
 
 			this.SetNeedsLayout();
 
-			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, () => { if (ActionBlock != null) { ActionBlock(this);}; this.RemoveFromSuperview(); });
+			UIView.Animate(AnimationDuration, 0, UIViewAnimationOptions.CurveEaseIn, animationBlock, DismissAndPerformAction);
 		}
 
+		void DismissAndPerformAction()
+		{
+			if (DismissBlock != null)
+			{
+				DismissBlock(this);
+			}
+			else if (ActionBlock != null)
+			{
+				ActionBlock(this);
+			}
+
+			this.RemoveFromSuperview();
+		}
 
 		/**
 		 * Show.
