@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>TTGSnackbar</id>
-        <version>0.9.1</version>
+        <version>1.0</version>
         <title>TTGSnackbar Xamarin iOS</title>
         <authors>Marc Bruins</authors>
         <projectUrl>https://github.com/MarcBruins/TTGSnackbar-Xamarin-iOS</projectUrl>
