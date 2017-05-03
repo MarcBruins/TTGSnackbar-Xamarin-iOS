@@ -33,8 +33,8 @@ var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Forever, "Cancel",
 			});
 snackbar.Show();
 ```
-+## Show a simple message with an icon image
- +![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_10.jpg)
+## Show a simple message with an icon image
+![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_10.jpg)
 ```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long, "Cancel", () => { Console.WriteLine("clicked");});
 snackbar.Icon = UIImage.FromBundle("EmojiCool");
