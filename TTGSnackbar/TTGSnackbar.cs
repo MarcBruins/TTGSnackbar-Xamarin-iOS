@@ -31,6 +31,9 @@ namespace SnackBarTTG.Source
         // Snackbar action button min width.
         private const float snackbarActionButtonMinWidth = 44;
 
+        // Snackbar icon imageView default width
+        private const float snackbarIconImageViewWidth = 32;
+
         // Action callback.
         public Action<TTGSnackbar> ActionBlock { get; set; }
 
@@ -172,6 +175,29 @@ namespace SnackBarTTG.Source
             set { _secondActionTextFont = value; this.secondActionButton.TitleLabel.Font = _secondActionTextFont; }
         }
 
+        private UIImage _icon;
+        public UIImage Icon
+        {
+            get { return _icon; }
+            set
+            {
+                _icon = value;
+                iconImageView.Image = _icon;
+            }
+        }
+
+        private UIViewContentMode _iconContentMode = UIViewContentMode.Center;
+        public UIViewContentMode IconContentMode
+        {
+            get { return _iconContentMode; }
+            set
+            {
+                _iconContentMode = value;
+                iconImageView.ContentMode = _iconContentMode;
+            }
+        }
+
+        private UIImageView iconImageView;
         private UILabel messageLabel;
         private UIView seperateView;
         private UIButton actionButton;
@@ -188,16 +214,14 @@ namespace SnackBarTTG.Source
         private NSLayoutConstraint bottomMarginConstraint;
         private NSLayoutConstraint actionButtonWidthConstraint;
         private NSLayoutConstraint secondActionButtonWidthConstraint;
+        private NSLayoutConstraint iconImageViewWidthConstraint;
 
-
-        /**
-		   Show a single message like a Toast.
-		   
-		   - parameter message:  Message text.
-		   - parameter duration: Duration type.
-		   
-		   - returns: Void
-		   */
+        /// <summary>
+        /// Show a single message like a Toast.
+        /// parameter message:  Message text.
+        /// parameter duration: Duration type.
+        /// returns: Void
+        /// </summary>
         public TTGSnackbar(string message, TTGSnackbarDuration duration) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
         {
             this.Duration = duration;
@@ -206,16 +230,14 @@ namespace SnackBarTTG.Source
             configure();
         }
 
-        /**
-		Show a message with action button.
-		
-		- parameter message:     Message text.
-		- parameter duration:    Duration type.
-		- parameter actionText:  Action button title.
-		- parameter actionBlock: Action callback closure.
-		
-		- returns: Void
-		*/
+        /// <summary>
+        /// Show a message with action button.
+        /// - parameter message:     Message text.
+        /// - parameter duration:    Duration type.
+        /// - parameter actionText:  Action button title.
+        /// - parameter actionBlock: Action callback closure.
+        /// - returns: Void
+        /// </summary>
         public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
         {
             this.Duration = duration;
@@ -226,17 +248,16 @@ namespace SnackBarTTG.Source
             configure();
         }
 
-        /**
-		Show a custom message with action button.
-		 
-		- parameter message:          Message text.
-		- parameter duration:         Duration type.
-		- parameter actionText:       Action button title.
-		- parameter messageFont:      Message label font.
-		- parameter actionButtonFont: Action button font.
-		- parameter actionBlock:      Action callback closure.
-		- returns: Void
-		*/
+        /// <summary>
+        /// Show a custom message with action button.
+        /// - parameter message:          Message text.
+        /// - parameter duration:         Duration type.
+        /// - parameter actionText:       Action button title.
+        /// - parameter messageFont:      Message label font.
+        /// - parameter actionButtonFont: Action button font.
+        /// - parameter actionBlock:      Action callback closure.
+        /// - returns: Void
+        /// </summary>
         public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
         {
             this.Duration = duration;
@@ -250,9 +271,9 @@ namespace SnackBarTTG.Source
         }
 
 
-        /**
-		Show the snackbar.
-		*/
+        /// <summary>
+        /// Show the snackbar.
+        /// </summary>
         public void Show()
         {
             // Only show once
@@ -260,9 +281,11 @@ namespace SnackBarTTG.Source
                 return;
 
             // Create dismiss timer
-            dismissTimer = NSTimer.CreateScheduledTimer((int)Duration, (t) => dismiss());
+            dismissTimer = NSTimer.CreateScheduledTimer((int)Duration, (t) => Dismiss());
 
             // Show or hide action button
+
+            iconImageView.Hidden = (Icon == null);
 
             if (ActionBlock == null)
             {
@@ -278,6 +301,7 @@ namespace SnackBarTTG.Source
 
             seperateView.Hidden = actionButton.Hidden;
 
+            iconImageViewWidthConstraint.Constant = iconImageView.Hidden ? 0 : TTGSnackbar.snackbarIconImageViewWidth;
             actionButtonWidthConstraint.Constant = actionButton.Hidden ? 0 : (secondActionButton.Hidden ? TTGSnackbar.snackbarActionButtonMaxWidth : TTGSnackbar.snackbarActionButtonMinWidth);
             secondActionButtonWidthConstraint.Constant = secondActionButton.Hidden ? 0 : (actionButton.Hidden ? TTGSnackbar.snackbarActionButtonMaxWidth : TTGSnackbar.snackbarActionButtonMinWidth);
 
@@ -343,10 +367,10 @@ namespace SnackBarTTG.Source
             }
         }
 
-        /**
-		 * Dismiss the snackbar manually.
-		*/
-        public void dismiss()
+        /// <summary>
+        /// Dismiss the snackbar manually..
+        /// </summary>
+        public void Dismiss()
         {
             this.dismissAnimated(true);
         }
@@ -360,6 +384,13 @@ namespace SnackBarTTG.Source
             this.BackgroundColor = UIColor.DarkGray;
             this.Layer.CornerRadius = CornerRadius;
             this.Layer.MasksToBounds = true;
+
+            iconImageView = new UIImageView();
+            iconImageView.TranslatesAutoresizingMaskIntoConstraints = false;
+            iconImageView.BackgroundColor = UIColor.Clear;
+            iconImageView.ContentMode = IconContentMode;
+
+            this.AddSubview(iconImageView);
 
             messageLabel = new UILabel();
             messageLabel.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -408,21 +439,28 @@ namespace SnackBarTTG.Source
             this.AddSubview(activityIndicatorView);
 
             // Add constraints
+
             var hConstraints = NSLayoutConstraint.FromVisualFormat(
-                "H:|-4-[messageLabel]-2-[seperateView(0.5)]-2-[actionButton]-0-[secondActionButton]-4-|",
+                "H:|-0-[iconImageView]-2-[messageLabel]-2-[seperateView(0.5)]-2-[actionButton(>=44@999)]-0-[secondActionButton(>=44@999)]-0-|",
                 0, new NSDictionary(),
                 NSDictionary.FromObjectsAndKeys(
                     new NSObject[] {
+                        iconImageView,
                         messageLabel,
                         seperateView,
                         actionButton,
                         secondActionButton
                 }, new NSObject[] {
+                    new NSString("iconImageView"),
                     new NSString("messageLabel"),
                     new NSString("seperateView"),
                     new NSString("actionButton"),
                     new NSString("secondActionButton")
                 })
+            );
+
+            var vConstraintsForIconImageView = NSLayoutConstraint.FromVisualFormat(
+                "V:|-2-[iconImageView]-2-|", 0, new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { iconImageView }, new NSObject[] { new NSString("iconImageView") })
             );
 
             var vConstraintsForMessageLabel = NSLayoutConstraint.FromVisualFormat(
@@ -441,6 +479,8 @@ namespace SnackBarTTG.Source
                 "V:|-0-[secondActionButton]-0-|", 0, new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { secondActionButton }, new NSObject[] { new NSString("secondActionButton") })
             );
 
+            iconImageViewWidthConstraint = NSLayoutConstraint.Create(iconImageView, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, TTGSnackbar.snackbarIconImageViewWidth);
+
             actionButtonWidthConstraint = NSLayoutConstraint.Create(actionButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, TTGSnackbar.snackbarActionButtonMinWidth);
 
             secondActionButtonWidthConstraint = NSLayoutConstraint.Create(secondActionButton, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, TTGSnackbar.snackbarActionButtonMinWidth);
@@ -449,22 +489,21 @@ namespace SnackBarTTG.Source
                 "V:|-2-[activityIndicatorView]-2-|", 0, new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] { new NSString("activityIndicatorView") })
             );
 
-            //todo fix constraint
             var hConstraintsForActivityIndicatorView = NSLayoutConstraint.FromVisualFormat(
-                //"H:[activityIndicatorView(activityIndicatorWidth)]-2-|",
                 "H:[activityIndicatorView]-2-|",
                 0,
                 new NSDictionary(),
                 NSDictionary.FromObjectsAndKeys(
                     new NSObject[] { activityIndicatorView },
                     new NSObject[] { new NSString("activityIndicatorView") })
-            //NSDictionary.FromObjectsAndKeys(new NSObject[] { activityIndicatorView }, new NSObject[] {  })
             );
 
+            iconImageView.AddConstraint(iconImageViewWidthConstraint);
             actionButton.AddConstraint(actionButtonWidthConstraint);
             secondActionButton.AddConstraint(secondActionButtonWidthConstraint);
 
             this.AddConstraints(hConstraints);
+            this.AddConstraints(vConstraintsForIconImageView);
             this.AddConstraints(vConstraintsForMessageLabel);
             this.AddConstraints(vConstraintsForSeperateView);
             this.AddConstraints(vConstraintsForActionButton);
@@ -473,9 +512,9 @@ namespace SnackBarTTG.Source
             this.AddConstraints(hConstraintsForActivityIndicatorView);
         }
 
-        /**
-		Invalid the dismiss timer.
-		*/
+        /// <summary>
+        /// Invalid the dismiss timer.
+        /// </summary>
         private void invalidDismissTimer()
         {
             if (dismissTimer != null)

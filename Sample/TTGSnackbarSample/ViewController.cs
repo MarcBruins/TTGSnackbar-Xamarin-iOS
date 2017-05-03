@@ -5,57 +5,59 @@ using UIKit;
 
 namespace TTGSnackbarSample
 {
-	public partial class ViewController : UIViewController
-	{
-		protected ViewController(IntPtr handle) : base(handle)
-		{
-			// Note: this .ctor should not contain any initialization logic.
-		}
+    public partial class ViewController : UIViewController
+    {
+        protected ViewController(IntPtr handle) : base(handle)
+        {
+            // Note: this .ctor should not contain any initialization logic.
+        }
 
-		public override void ViewDidAppear(bool animated)
-		{
-			base.ViewDidAppear(animated);
-		}
+        public override void ViewDidAppear(bool animated)
+        {
+            base.ViewDidAppear(animated);
+        }
 
-		partial void buttonClicked(UIButton sender)
-		{
-			var snackbar = new TTGSnackbar("Hello Xamarin snackbar", TTGSnackbarDuration.Long);
+        partial void buttonClicked(UIButton sender)
+        {
+            var snackbar = new TTGSnackbar("Hello Xamarin snackbar", TTGSnackbarDuration.Long);
 
-			snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
+            snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
 
-			// Action 1
-			snackbar.ActionText = "Yes";
-			snackbar.ActionTextColor = UIColor.Green;
-			snackbar.ActionBlock = (t) => { Console.WriteLine("clicked yes"); };
+            // Action 1
+            snackbar.ActionText = "Yes";
+            snackbar.ActionTextColor = UIColor.Green;
+            snackbar.ActionBlock = (t) => { Console.WriteLine("clicked yes"); };
 
-			// Action 2
-			snackbar.SecondActionText = "No";
-			snackbar.SecondActionTextColor = UIColor.Magenta;
-			snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
+            // Action 2
+            snackbar.SecondActionText = "No";
+            snackbar.SecondActionTextColor = UIColor.Magenta;
+            snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
 
-			// Dissmiss Callback
-			snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
+            // Dissmiss Callback
+            snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
 
-			snackbar.Show();
-		}
+            snackbar.Icon = UIImage.FromBundle("EmojiCool");
 
-		public void cancel()
-		{
-			//do something
-		}
+            snackbar.Show();
+        }
 
-		public override void ViewDidLoad()
-		{
-			base.ViewDidLoad();
-			// Perform any additional setup after loading the view, typically from a nib.
+        public void cancel()
+        {
+            //do something
+        }
 
-		}
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+            // Perform any additional setup after loading the view, typically from a nib.
 
-		public override void DidReceiveMemoryWarning()
-		{
-			base.DidReceiveMemoryWarning();
-			// Release any cached data, images, etc that aren't in use.
-		}
-	}
+        }
+
+        public override void DidReceiveMemoryWarning()
+        {
+            base.DidReceiveMemoryWarning();
+            // Release any cached data, images, etc that aren't in use.
+        }
+    }
 }
 
