@@ -37,7 +37,7 @@ namespace TTGSnackbarSample
             snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
 
             snackbar.Icon = UIImage.FromBundle("EmojiCool");
-            snackbar.LocationType = TTGSnackbarLocation.Top;
+            //snackbar.LocationType = TTGSnackbarLocation.Top;
 
             snackbar.Show();
         }
