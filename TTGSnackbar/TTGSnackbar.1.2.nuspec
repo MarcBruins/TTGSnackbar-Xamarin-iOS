@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>TTGSnackbar</id>
-        <version>1.1</version>
+        <version>1.2</version>
         <title>TTGSnackbar Xamarin iOS</title>
         <authors>Marc Bruins</authors>
         <projectUrl>https://github.com/MarcBruins/TTGSnackbar-Xamarin-iOS</projectUrl>
@@ -10,6 +10,6 @@
         <description>An Android snackbar look a like made for Xamarin iOS</description>
     </metadata>
     <files>
-        <file src="TTGSnackbar.dll" target="lib\Xamarin.iOS10\TTGSnackbar.dll" />
+        <file src="bin\Release\TTGSnackbar.dll" target="lib\Xamarin.iOS10\TTGSnackbar.dll" />
     </files>
 </package>
