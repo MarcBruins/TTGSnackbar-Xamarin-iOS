@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SnackBarTTG.Source;
+using TTGSnackBar;
 using UIKit;
 
 namespace TTGSnackbarSample
@@ -37,6 +37,7 @@ namespace TTGSnackbarSample
             snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
 
             snackbar.Icon = UIImage.FromBundle("EmojiCool");
+            snackbar.LocationType = TTGSnackbarLocation.Top;
 
             snackbar.Show();
         }

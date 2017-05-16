@@ -2,7 +2,7 @@
 using Foundation;
 using UIKit;
 
-namespace SnackBarTTG.Source
+namespace TTGSnackBar
 {
     public enum TTGSnackbarDuration
     {
@@ -20,6 +20,12 @@ namespace SnackBarTTG.Source
         SlideFromLeftToRight,
         SlideFromRightToLeft,
         Flip,
+    }
+
+    public enum TTGSnackbarLocation
+    {
+        Bottom,
+        Top,
     }
 
     public class TTGSnackbar : UIView
@@ -49,6 +55,9 @@ namespace SnackBarTTG.Source
         // Snackbar animation type. Default is SlideFromBottomBackToBottom.
         public TTGSnackbarAnimationType AnimationType = TTGSnackbarAnimationType.SlideFromLeftToRight;
 
+        // Snackbar location
+        public TTGSnackbarLocation LocationType = TTGSnackbarLocation.Bottom;
+
         // Show and hide animation duration. Default is 0.3
         public float AnimationDuration = 0.3f;
 
@@ -68,6 +77,17 @@ namespace SnackBarTTG.Source
 
                 this.Layer.CornerRadius = _cornerRadius;
                 this.Layer.MasksToBounds = true;
+            }
+        }
+
+        /// Top margin. Default is 4
+        private float _topMargin = 20;
+        public float TopMargin
+        {
+            get { return _topMargin; }
+            set
+            {
+                _topMargin = value; if (topMarginConstraint != null) { topMarginConstraint.Constant = _topMargin; this.LayoutIfNeeded(); }
             }
         }
 
@@ -197,12 +217,12 @@ namespace SnackBarTTG.Source
             }
         }
 
-        private UIImageView iconImageView;
-        private UILabel messageLabel;
-        private UIView seperateView;
-        private UIButton actionButton;
-        private UIButton secondActionButton;
-        private UIActivityIndicatorView activityIndicatorView;
+        public UIImageView iconImageView;
+        public UILabel messageLabel;
+        public UIView seperateView;
+        public UIButton actionButton;
+        public UIButton secondActionButton;
+        public UIActivityIndicatorView activityIndicatorView;
 
         // Timer to dismiss the snackbar.
         private NSTimer dismissTimer;
@@ -212,6 +232,7 @@ namespace SnackBarTTG.Source
         private NSLayoutConstraint leftMarginConstraint;
         private NSLayoutConstraint rightMarginConstraint;
         private NSLayoutConstraint bottomMarginConstraint;
+        private NSLayoutConstraint topMarginConstraint;
         private NSLayoutConstraint actionButtonWidthConstraint;
         private NSLayoutConstraint secondActionButtonWidthConstraint;
         private NSLayoutConstraint iconImageViewWidthConstraint;
@@ -312,6 +333,15 @@ namespace SnackBarTTG.Source
             {
                 localSuperView.AddSubview(this);
 
+                topMarginConstraint = NSLayoutConstraint.Create(
+                    this,
+                    NSLayoutAttribute.Top,
+                    NSLayoutRelation.Equal,
+                    localSuperView,
+                    NSLayoutAttribute.Top,
+                    1,
+                    TopMargin);
+
                 heightConstraint = NSLayoutConstraint.Create(
                     this,
                     NSLayoutAttribute.Height,
@@ -356,7 +386,17 @@ namespace SnackBarTTG.Source
                 this.AddConstraint(heightConstraint);
                 localSuperView.AddConstraint(leftMarginConstraint);
                 localSuperView.AddConstraint(rightMarginConstraint);
-                localSuperView.AddConstraint(bottomMarginConstraint);
+
+                switch (LocationType)
+                {
+                    case TTGSnackbarLocation.Top:
+                        localSuperView.AddConstraint(topMarginConstraint);
+                        break;
+                    default:
+                        localSuperView.AddConstraint(bottomMarginConstraint);
+                        break;
+                }
+
 
                 // Show 
                 showWithAnimation();
@@ -376,8 +416,8 @@ namespace SnackBarTTG.Source
         }
 
         /**
-		 * Init configuration.
-		*/
+         * Init configuration.
+*/
         private void configure()
         {
             this.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -525,10 +565,10 @@ namespace SnackBarTTG.Source
         }
 
         /**
-		Dismiss.
-		
-		- parameter animated: If dismiss with animation.
-		*/
+Dismiss.
+
+- parameter animated: If dismiss with animation.
+*/
         private void dismissAnimated(bool animated)
         {
             invalidDismissTimer();
@@ -594,8 +634,8 @@ namespace SnackBarTTG.Source
         }
 
         /**
-		 * Show.
-		*/
+         * Show.
+*/
         private void showWithAnimation()
         {
             Action animationBlock = () => { this.LayoutIfNeeded(); };
@@ -635,6 +675,7 @@ namespace SnackBarTTG.Source
             bottomMarginConstraint.Constant = -BottomMargin;
             leftMarginConstraint.Constant = LeftMargin;
             rightMarginConstraint.Constant = -RightMargin;
+            topMarginConstraint.Constant = TopMargin;
 
             UIView.AnimateNotify(
                     AnimationDuration,
@@ -648,8 +689,8 @@ namespace SnackBarTTG.Source
         }
 
         /**
-		Action button.
-		*/
+Action button.
+*/
         private void doAction(UIButton button)
         {
             // Call action block first
