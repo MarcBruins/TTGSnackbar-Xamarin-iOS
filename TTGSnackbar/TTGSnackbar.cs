@@ -415,9 +415,9 @@ namespace TTGSnackBar
             this.dismissAnimated(true);
         }
 
-        /**
-         * Init configuration.
-*/
+        /// <summary>
+        /// Configure this instance.
+        /// </summary>
         private void configure()
         {
             this.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -564,11 +564,9 @@ namespace TTGSnackBar
             }
         }
 
-        /**
-Dismiss.
-
-- parameter animated: If dismiss with animation.
-*/
+        /// <summary>
+        /// If dismiss with animation.
+        /// </summary>
         private void dismissAnimated(bool animated)
         {
             invalidDismissTimer();
@@ -633,9 +631,9 @@ Dismiss.
             this.RemoveFromSuperview();
         }
 
-        /**
-         * Show.
-*/
+        /// <summary>
+        /// Shows with animation.
+        /// </summary>
         private void showWithAnimation()
         {
             Action animationBlock = () => { this.LayoutIfNeeded(); };
@@ -688,9 +686,6 @@ Dismiss.
                 );
         }
 
-        /**
-Action button.
-*/
         private void doAction(UIButton button)
         {
             // Call action block first
