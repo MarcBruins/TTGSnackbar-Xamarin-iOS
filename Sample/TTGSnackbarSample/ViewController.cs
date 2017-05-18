@@ -19,7 +19,8 @@ namespace TTGSnackbarSample
 
         partial void buttonClicked(UIButton sender)
         {
-            var snackbar = new TTGSnackbar("Hello Xamarin snackbar", TTGSnackbarDuration.Long);
+            var snackbar = new TTGSnackbar("Hello Xamarin snackbar");
+            //snackbar.Duration = TimeSpan.FromSeconds(10);
 
             snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
 
@@ -37,7 +38,7 @@ namespace TTGSnackbarSample
             snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
 
             snackbar.Icon = UIImage.FromBundle("EmojiCool");
-            //snackbar.LocationType = TTGSnackbarLocation.Top;
+            snackbar.LocationType = TTGSnackbarLocation.Top;
 
             snackbar.Show();
         }

@@ -4,14 +4,6 @@ using UIKit;
 
 namespace TTGSnackBar
 {
-    public enum TTGSnackbarDuration
-    {
-        Short = 1,
-        Middle = 3,
-        Long = 5,
-        Forever = 9999999 // Must dismiss manually.
-    }
-
     public enum TTGSnackbarAnimationType
     {
         FadeInFadeOut,
@@ -50,7 +42,7 @@ namespace TTGSnackBar
         public Action<TTGSnackbar> DismissBlock { get; set; }
 
         // Snackbar display duration. Default is Short - 1 second.
-        public TTGSnackbarDuration Duration = TTGSnackbarDuration.Short;
+        public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(3);
 
         // Snackbar animation type. Default is SlideFromBottomBackToBottom.
         public TTGSnackbarAnimationType AnimationType = TTGSnackbarAnimationType.SlideFromLeftToRight;
@@ -238,30 +230,24 @@ namespace TTGSnackBar
         private NSLayoutConstraint iconImageViewWidthConstraint;
 
         /// <summary>
-        /// Show a single message like a Toast.
-        /// parameter message:  Message text.
-        /// parameter duration: Duration type.
-        /// returns: Void
+        /// Show a single message like an Android snackbar.
+        /// - parameter message:  Message text.
         /// </summary>
-        public TTGSnackbar(string message, TTGSnackbarDuration duration) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
+        public TTGSnackbar(string message) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
         {
-            this.Duration = duration;
             this.Message = message;
-
             configure();
         }
 
         /// <summary>
         /// Show a message with action button.
         /// - parameter message:     Message text.
-        /// - parameter duration:    Duration type.
         /// - parameter actionText:  Action button title.
         /// - parameter actionBlock: Action callback closure.
         /// - returns: Void
         /// </summary>
-        public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
+        public TTGSnackbar(string message, string actionText, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
         {
-            this.Duration = duration;
             this.Message = message;
             this.ActionText = actionText;
             this.ActionBlock = ttgAction;
@@ -272,16 +258,14 @@ namespace TTGSnackBar
         /// <summary>
         /// Show a custom message with action button.
         /// - parameter message:          Message text.
-        /// - parameter duration:         Duration type.
         /// - parameter actionText:       Action button title.
         /// - parameter messageFont:      Message label font.
         /// - parameter actionButtonFont: Action button font.
         /// - parameter actionBlock:      Action callback closure.
         /// - returns: Void
         /// </summary>
-        public TTGSnackbar(string message, TTGSnackbarDuration duration, string actionText, UIFont messageFont, UIFont actionTextFont, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
+        public TTGSnackbar(string message, string actionText, UIFont messageFont, UIFont actionTextFont, Action<TTGSnackbar> ttgAction) : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
         {
-            this.Duration = duration;
             this.Message = message;
             this.ActionText = actionText;
             this.ActionBlock = ttgAction;
@@ -302,7 +286,7 @@ namespace TTGSnackBar
                 return;
 
             // Create dismiss timer
-            dismissTimer = NSTimer.CreateScheduledTimer((int)Duration, (t) => Dismiss());
+            dismissTimer = NSTimer.CreateScheduledTimer(Duration, (t) => Dismiss());
 
             // Show or hide action button
 
@@ -698,21 +682,7 @@ namespace TTGSnackBar
                 SecondActionBlock(this);
             }
 
-            if (Duration == TTGSnackbarDuration.Forever && actionButton.Hidden == false)
-            {
-                actionButton.Hidden = true;
-                secondActionButton.Hidden = true;
-
-                seperateView.Hidden = true;
-
-                activityIndicatorView.Hidden = false;
-
-                activityIndicatorView.StartAnimating();
-            }
-            else
-            {
-                dismissAnimated(true);
-            }
+            dismissAnimated(true);
         }
     }
 }
