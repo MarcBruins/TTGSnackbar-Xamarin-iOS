@@ -11,7 +11,6 @@ namespace TTGSnackBar
         SlideFromBottomBackToBottom,
         SlideFromLeftToRight,
         SlideFromRightToLeft,
-        Flip,
     }
 
     public enum TTGSnackbarLocation
@@ -591,9 +590,6 @@ namespace TTGSnackBar
                         rightMarginConstraint.Constant = -RightMargin - superViewWidth;
                     };
                     break;
-                case TTGSnackbarAnimationType.Flip:
-                    //todo animationBlock = () => { this.Layer.Transform = CAT(CGFloat(M_PI_2), 1, 0, 0);}
-                    break;
             };
 
             this.SetNeedsLayout();
@@ -647,9 +643,6 @@ namespace TTGSnackBar
                     rightMarginConstraint.Constant = -RightMargin + superViewWidth;
                     bottomMarginConstraint.Constant = -BottomMargin;
                     this.LayoutIfNeeded();
-                    break;
-                case TTGSnackbarAnimationType.Flip:
-                    //todo animationBlock = () => { this.Layer.Transform = CAT(CGFloat(M_PI_2), 1, 0, 0);}
                     break;
             };
 
