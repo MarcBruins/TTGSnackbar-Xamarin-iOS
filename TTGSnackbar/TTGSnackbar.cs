@@ -603,10 +603,6 @@ namespace TTGSnackBar
             {
                 DismissBlock(this);
             }
-            else if (ActionBlock != null)
-            {
-                ActionBlock(this);
-            }
 
             this.RemoveFromSuperview();
         }
