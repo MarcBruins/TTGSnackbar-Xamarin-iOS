@@ -19,25 +19,28 @@ namespace TTGSnackbarSample
         partial void buttonClicked(UIButton sender)
         {
             var snackbar = new TTGSnackbar("Hello Xamarin snackbar");
-            //snackbar.Duration = TimeSpan.FromSeconds(10);
+            snackbar.Duration = TimeSpan.FromSeconds(3);
 
-            snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
+            // snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
 
             // Action 1
-            snackbar.ActionText = "Yes";
+            snackbar.ActionText = "Undo";
             snackbar.ActionTextColor = UIColor.Green;
-            snackbar.ActionBlock = (t) => { Console.WriteLine("clicked yes"); };
+            snackbar.ActionBlock = (t) =>
+            {
+                Console.WriteLine("clicked yes");
+            };
 
-            // Action 2
-            snackbar.SecondActionText = "No";
-            snackbar.SecondActionTextColor = UIColor.Magenta;
-            snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
+            //// Action 2
+            //snackbar.SecondActionText = "No";
+            //snackbar.SecondActionTextColor = UIColor.Magenta;
+            //snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
 
             // Dissmiss Callback
-            snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
+            //snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
 
-            snackbar.Icon = UIImage.FromBundle("EmojiCool");
-            snackbar.LocationType = TTGSnackbarLocation.Bottom;
+            //snackbar.Icon = UIImage.FromBundle("EmojiCool");
+            //snackbar.LocationType = TTGSnackbarLocation.Top;
 
             snackbar.Show();
         }

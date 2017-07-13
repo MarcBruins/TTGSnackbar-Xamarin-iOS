@@ -32,10 +32,10 @@ namespace TTGSnackBar
         private const float snackbarIconImageViewWidth = 32;
 
         // Action callback.
-        public Action<TTGSnackbar> ActionBlock { get; set; }
+        public Action<TTGSnackbar> ActionBlock { get; set; } = null;
 
         // Second action block
-        public Action<TTGSnackbar> SecondActionBlock { get; set; }
+        public Action<TTGSnackbar> SecondActionBlock { get; set; } = null;
 
         // Dismiss block
         public Action<TTGSnackbar> DismissBlock { get; set; }
@@ -291,18 +291,6 @@ namespace TTGSnackBar
 
             iconImageView.Hidden = (Icon == null);
 
-            if (ActionBlock == null)
-            {
-                ActionText = String.Empty;
-                actionButton.Hidden = true;
-            }
-
-            if (secondActionButton == null)
-            {
-                SecondActionText = String.Empty;
-                secondActionButton.Hidden = true;
-            }
-
             seperateView.Hidden = actionButton.Hidden;
 
             iconImageViewWidthConstraint.Constant = iconImageView.Hidden ? 0 : TTGSnackbar.snackbarIconImageViewWidth;
@@ -434,7 +422,14 @@ namespace TTGSnackBar
             actionButton.TitleLabel.AdjustsFontSizeToFitWidth = true;
             actionButton.SetTitle(ActionText, UIControlState.Normal);
             actionButton.SetTitleColor(ActionTextColor, UIControlState.Normal);
-            actionButton.TouchUpInside += (s, e) => doAction(actionButton);
+            actionButton.TouchUpInside += (s, e) =>
+            {
+                if (!actionButton.Hidden && actionButton.Title(UIControlState.Normal) != String.Empty && actionButton != null)
+                {
+                    ActionBlock(this);
+                    dismissAnimated(true);
+                }
+            };
 
             this.AddSubview(actionButton);
 
@@ -445,7 +440,14 @@ namespace TTGSnackBar
             secondActionButton.TitleLabel.AdjustsFontSizeToFitWidth = true;
             secondActionButton.SetTitle(SecondActionText, UIControlState.Normal);
             secondActionButton.SetTitleColor(SecondActionTextColor, UIControlState.Normal);
-            secondActionButton.TouchUpInside += (s, e) => doAction(secondActionButton);
+            secondActionButton.TouchUpInside += (s, e) =>
+            {
+                if (!secondActionButton.Hidden && secondActionButton.Title(UIControlState.Normal) != String.Empty && SecondActionBlock != null)
+                {
+                    SecondActionBlock(this);
+                    dismissAnimated(true);
+                }
+            };
 
             this.AddSubview(secondActionButton);
 
