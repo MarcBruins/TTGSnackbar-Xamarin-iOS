@@ -21,26 +21,26 @@ namespace TTGSnackbarSample
             var snackbar = new TTGSnackbar("Hello Xamarin snackbar");
             snackbar.Duration = TimeSpan.FromSeconds(3);
 
-            // snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
+            snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
 
             // Action 1
-            snackbar.ActionText = "Undo";
+            snackbar.ActionText = "Yes";
             snackbar.ActionTextColor = UIColor.Green;
             snackbar.ActionBlock = (t) =>
             {
                 Console.WriteLine("clicked yes");
             };
 
-            //// Action 2
-            //snackbar.SecondActionText = "No";
-            //snackbar.SecondActionTextColor = UIColor.Magenta;
-            //snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
+            // Action 2
+            snackbar.SecondActionText = "No";
+            snackbar.SecondActionTextColor = UIColor.Magenta;
+            snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
 
-            // Dissmiss Callback
-            //snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
+            // Dismiss Callback
+            snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
 
-            //snackbar.Icon = UIImage.FromBundle("EmojiCool");
-            //snackbar.LocationType = TTGSnackbarLocation.Top;
+            snackbar.Icon = UIImage.FromBundle("EmojiCool");
+            snackbar.LocationType = TTGSnackbarLocation.Top;
 
             snackbar.Show();
         }
