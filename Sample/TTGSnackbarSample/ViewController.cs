@@ -23,6 +23,11 @@ namespace TTGSnackbarSample
 
             snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
 
+            snackbar.BottomMargin = 48; //menu height is 48 
+            snackbar.LeftMargin = 0;
+            snackbar.RightMargin = 0;
+            snackbar.BackgroundColor = UIColor.FromRGB(249, 250, 254);
+
             // Action 1
             snackbar.ActionText = "Yes";
             snackbar.ActionTextColor = UIColor.Green;
