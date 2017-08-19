@@ -492,6 +492,10 @@ namespace TTGSnackBar
                 "V:|-0-[messageLabel]-0-|", 0, new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { MessageLabel }, new NSObject[] { new NSString("messageLabel") })
             );
 
+            var hConstraintsForMessageLabel = NSLayoutConstraint.FromVisualFormat(
+                "H:|-20-[messageLabel]-0-|", 0, new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { MessageLabel }, new NSObject[] { new NSString("messageLabel") })
+            );
+
             var vConstraintsForSeperateView = NSLayoutConstraint.FromVisualFormat(
                 "V:|-4-[seperateView]-4-|", 0, new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { SeperateView }, new NSObject[] { new NSString("seperateView") })
             );
@@ -535,6 +539,7 @@ namespace TTGSnackBar
             this.AddConstraints(vConstraintsForSecondActionButton);
             this.AddConstraints(vConstraintsForActivityIndicatorView);
             this.AddConstraints(hConstraintsForActivityIndicatorView);
+            this.AddConstraints(hConstraintsForMessageLabel);
         }
 
         /// <summary>
