@@ -302,13 +302,15 @@ namespace TTGSnackBar
             var localSuperView = UIApplication.SharedApplication.KeyWindow;
             if (localSuperView != null)
             {
+                var safeAreaLayoutGuide = localSuperView.SafeAreaLayoutGuide;
+
                 localSuperView.AddSubview(this);
 
                 topMarginConstraint = NSLayoutConstraint.Create(
                     this,
                     NSLayoutAttribute.Top,
                     NSLayoutRelation.Equal,
-                    localSuperView,
+                    safeAreaLayoutGuide,
                     NSLayoutAttribute.Top,
                     1,
                     TopMargin);
@@ -326,7 +328,7 @@ namespace TTGSnackBar
                     this,
                     NSLayoutAttribute.Left,
                     NSLayoutRelation.Equal,
-                    localSuperView,
+                    safeAreaLayoutGuide,
                     NSLayoutAttribute.Left,
                     1,
                     LeftMargin);
@@ -335,7 +337,7 @@ namespace TTGSnackBar
                     this,
                     NSLayoutAttribute.Right,
                     NSLayoutRelation.Equal,
-                    localSuperView,
+                    safeAreaLayoutGuide,
                     NSLayoutAttribute.Right,
                     1,
                     -RightMargin);
@@ -344,7 +346,7 @@ namespace TTGSnackBar
                     this,
                     NSLayoutAttribute.Bottom,
                     NSLayoutRelation.Equal,
-                    localSuperView,
+                    safeAreaLayoutGuide,
                     NSLayoutAttribute.Bottom,
                     1,
                     -BottomMargin);
@@ -369,7 +371,7 @@ namespace TTGSnackBar
                 }
 
 
-                // Show 
+                // Show
                 showWithAnimation();
             }
             else
