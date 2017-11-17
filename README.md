@@ -13,30 +13,38 @@ iOS 8+
 # Usage
 ## Show a simple message
 ![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_2.png)
-```
+```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Short);
 snackbar.Show();
 ```
 ## Show a simple message with an action button
 ![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_3.png)
-```
+```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long, "Cancel", () => { Console.WriteLine("clicked");});   
 snackbar.Show();
 ```
 
 ## Show a simple message with a long running action
 ![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_5.png)
-```
+```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Forever, "Cancel", async (s) => {
 				await Task.Delay(3000);
 				s.dismiss();
 			});
 snackbar.Show();
 ```
-
+## Show a simple message with an icon image
+![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_10.jpg)
+```c
+var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long, "Cancel", () => { Console.WriteLine("clicked");});
+snackbar.Icon = UIImage.FromBundle("EmojiCool");
+snackbar.Show();
+```
+ +
+ 
 ## Show a simple message with two action buttons
 ![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_9.png)
-```
+```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Middle);
 
 // Action 1

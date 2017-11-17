@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using TTGSnackBar;
 using UIKit;
 
@@ -19,25 +18,31 @@ namespace TTGSnackbarSample
 
         partial void buttonClicked(UIButton sender)
         {
-            var snackbar = new TTGSnackbar("Hello Xamarin snackbar", TTGSnackbarDuration.Long);
+            var snackbar = new TTGSnackbar("Hello Xamarin snackbar");
+            snackbar.Duration = TimeSpan.FromSeconds(3);
 
             snackbar.AnimationType = TTGSnackbarAnimationType.FadeInFadeOut;
+
+            snackbar.SeperateView.Alpha = 0;
 
             // Action 1
             snackbar.ActionText = "Yes";
             snackbar.ActionTextColor = UIColor.Green;
-            snackbar.ActionBlock = (t) => { Console.WriteLine("clicked yes"); };
+            snackbar.ActionBlock = (t) =>
+            {
+                Console.WriteLine("clicked yes");
+            };
 
             // Action 2
             snackbar.SecondActionText = "No";
             snackbar.SecondActionTextColor = UIColor.Magenta;
             snackbar.SecondActionBlock = (t) => { Console.WriteLine("clicked no"); };
 
-            // Dissmiss Callback
+            // Dismiss Callback
             snackbar.DismissBlock = (t) => { Console.WriteLine("dismissed snackbar"); };
 
             snackbar.Icon = UIImage.FromBundle("EmojiCool");
-            //snackbar.LocationType = TTGSnackbarLocation.Top;
+            snackbar.LocationType = TTGSnackbarLocation.Top;
 
             snackbar.Show();
         }
