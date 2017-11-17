@@ -31,6 +31,8 @@ namespace TTGSnackBar
         // Snackbar icon imageView default width
         private const float snackbarIconImageViewWidth = 32;
 
+        private NSLayoutConstraint[] hConstraints;
+
         // Action callback.
         public Action<TTGSnackbar> ActionBlock { get; set; } = null;
 
@@ -140,11 +142,33 @@ namespace TTGSnackBar
             set { _messageTextAlign = value; this.MessageLabel.TextAlignment = _messageTextAlign; }
         }
 
+        private nfloat _messageMarginLeft = 2;
+        public nfloat MessageMarginLeft 
+        {
+            get { return _messageMarginLeft; }
+            set { _messageMarginLeft = value; invalidateHorizontalConstraints(); }
+        }
+
+        private nfloat _messageMarginRight = 2;
+        public nfloat MessageMarginRight
+        {
+            get { return _messageMarginRight; }
+            set { _messageMarginRight = value; invalidateHorizontalConstraints(); }
+        }
+
         private string _actionText;
         public string ActionText
         {
             get { return _actionText; }
-            set { _actionText = value; if (this.ActionButton != null) { this.ActionButton.SetTitle(_actionText, UIControlState.Normal); } }
+            set
+            {
+                _actionText = value;
+                if (this.ActionButton != null)
+                {
+                    this.ActionButton.SetTitle(_actionText, UIControlState.Normal);
+                    this.ActionButton.Hidden = string.IsNullOrEmpty(value);
+                }
+            }
         }
 
         private string _secondActionText;
@@ -424,6 +448,7 @@ namespace TTGSnackBar
 
             ActionButton = new UIButton();
             ActionButton.TranslatesAutoresizingMaskIntoConstraints = false;
+            ActionButton.Hidden = string.IsNullOrEmpty(ActionText);
             ActionButton.BackgroundColor = UIColor.Clear;
             ActionButton.TitleLabel.Font = ActionTextFont;
             ActionButton.TitleLabel.AdjustsFontSizeToFitWidth = true;
@@ -470,26 +495,8 @@ namespace TTGSnackBar
 
             this.AddSubview(ActivityIndicatorView);
 
-            // Add constraints
-
-            var hConstraints = NSLayoutConstraint.FromVisualFormat(
-                "H:|-0-[iconImageView]-2-[messageLabel]-2-[seperateView(0.5)]-2-[actionButton(>=44@999)]-0-[secondActionButton(>=44@999)]-0-|",
-                0, new NSDictionary(),
-                NSDictionary.FromObjectsAndKeys(
-                    new NSObject[] {
-                        IconImageView,
-                        MessageLabel,
-                        SeperateView,
-                        ActionButton,
-                        SecondActionButton
-                }, new NSObject[] {
-                    new NSString("iconImageView"),
-                    new NSString("messageLabel"),
-                    new NSString("seperateView"),
-                    new NSString("actionButton"),
-                    new NSString("secondActionButton")
-                })
-            );
+            // Add constraints        
+            invalidateHorizontalConstraints();
 
             var vConstraintsForIconImageView = NSLayoutConstraint.FromVisualFormat(
                 "V:|-2-[iconImageView]-2-|", 0, new NSDictionary(), NSDictionary.FromObjectsAndKeys(new NSObject[] { IconImageView }, new NSObject[] { new NSString("iconImageView") })
@@ -554,6 +561,34 @@ namespace TTGSnackBar
                 dismissTimer.Invalidate();
                 dismissTimer = null;
             }
+        }
+
+
+        private void invalidateHorizontalConstraints()
+        {
+            if (hConstraints != null && hConstraints.Length > 0)
+                this.RemoveConstraints(hConstraints);
+
+
+            hConstraints = NSLayoutConstraint.FromVisualFormat(
+                $"H:|-0-[iconImageView]-{MessageMarginLeft}-[messageLabel]-{MessageMarginRight}-[seperateView(0.5)]-2-[actionButton(>=44@999)]-0-[secondActionButton(>=44@999)]-0-|",
+                0, new NSDictionary(),
+                NSDictionary.FromObjectsAndKeys(
+                    new NSObject[] {
+                        IconImageView,
+                        MessageLabel,
+                        SeperateView,
+                        ActionButton,
+                        SecondActionButton
+                }, new NSObject[] {
+                    new NSString("iconImageView"),
+                    new NSString("messageLabel"),
+                    new NSString("seperateView"),
+                    new NSString("actionButton"),
+                    new NSString("secondActionButton")
+                })
+            );
+            this.AddConstraints(hConstraints);
         }
 
         /// <summary>
