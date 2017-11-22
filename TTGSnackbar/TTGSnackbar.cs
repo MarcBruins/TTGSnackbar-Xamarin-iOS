@@ -311,9 +311,12 @@ namespace TTGSnackBar
             // Create dismiss timer
             dismissTimer = NSTimer.CreateScheduledTimer(Duration, (t) => Dismiss());
 
-            // Show or hide action button
-
+            // Show or hide Icon
             IconImageView.Hidden = (Icon == null);
+
+            // Show or hide action button
+            ActionButton.Hidden = string.IsNullOrEmpty(ActionText) || ActionBlock == null;
+            SecondActionButton.Hidden = string.IsNullOrEmpty(SecondActionText) || SecondActionBlock == null;
 
             SeperateView.Hidden = ActionButton.Hidden;
 
