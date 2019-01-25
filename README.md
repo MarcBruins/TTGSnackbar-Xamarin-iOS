@@ -1,7 +1,7 @@
 # TTGSnackbar-Xamarin-iOS
 A C#/Xamarin based implementation of the Android Snackbar for iOS.
 
-![Screenshot](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_8.gif)
+![Screenshot](https://user-images.githubusercontent.com/1341446/51748842-90a5fa00-20a5-11e9-819f-8f085de22c7b.png)
 # About
 TTGSnackbar is useful for showing a brief message at the bottom of the screen with an action button.  
 It appears above all other elements on screen and only one can be displayed at a time.  
@@ -12,20 +12,20 @@ iOS 8+
 
 # Usage
 ## Show a simple message
-![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_2.png)
+![Example](https://user-images.githubusercontent.com/1341446/51748937-ce0a8780-20a5-11e9-8202-a165f1b9ac04.png)
 ```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Short);
 snackbar.Show();
 ```
 ## Show a simple message with an action button
-![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_3.png)
+![Example](https://user-images.githubusercontent.com/1341446/51748962-ec708300-20a5-11e9-8364-994ee351d6aa.png)
 ```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long, "Cancel", () => { Console.WriteLine("clicked");});   
 snackbar.Show();
 ```
 
 ## Show a simple message with a long running action
-![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_5.png)
+![Example](https://user-images.githubusercontent.com/1341446/51748979-fe522600-20a5-11e9-9a65-3235c7759da3.png)
 ```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Forever, "Cancel", async (s) => {
 				await Task.Delay(3000);
@@ -34,7 +34,7 @@ var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Forever, "Cancel",
 snackbar.Show();
 ```
 ## Show a simple message with an icon image
-![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_10.jpg)
+![Example](https://user-images.githubusercontent.com/1341446/51749009-132eb980-20a6-11e9-81b8-a1cc922d53b1.png)
 ```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Long, "Cancel", () => { Console.WriteLine("clicked");});
 snackbar.Icon = UIImage.FromBundle("EmojiCool");
@@ -43,7 +43,7 @@ snackbar.Show();
  +
  
 ## Show a simple message with two action buttons
-![Example](http://7nj2iz.com1.z0.glb.clouddn.com/TTGSnackbar_9.png)
+![Example](https://user-images.githubusercontent.com/1341446/51749034-22156c00-20a6-11e9-8ccb-6271532adf97.png)
 ```c
 var snackbar = new TTGSnackbar("Message", TTGSnackbarDuration.Middle);
 
